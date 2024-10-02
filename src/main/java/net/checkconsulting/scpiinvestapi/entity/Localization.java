@@ -1,4 +1,5 @@
-package net.checkconsulting.scpiinvestapi.Entity;
+package net.checkconsulting.scpiinvestapi.entity;
+
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,10 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class Sector {
+public class Localization {
 
     @EmbeddedId
-    private SectorId id;
+    private LocalizationId id;
 
     private Float percent;
 
@@ -24,11 +25,3 @@ public class Sector {
     private Scpi scpi;
 }
 
-@Embeddable
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-class SectorId implements java.io.Serializable {
-    private Integer scpiId;
-    private Integer sector;
-}

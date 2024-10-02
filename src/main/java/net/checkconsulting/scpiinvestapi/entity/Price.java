@@ -1,4 +1,4 @@
-package net.checkconsulting.scpiinvestapi.Entity;
+package net.checkconsulting.scpiinvestapi.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,11 +25,3 @@ public class Price {
     private Scpi scpi;
 }
 
-@Embeddable
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-class PriceId implements java.io.Serializable {
-    private Integer scpiId;
-    private Integer year;
-}

@@ -1,5 +1,4 @@
-package net.checkconsulting.scpiinvestapi.Entity;
-
+package net.checkconsulting.scpiinvestapi.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,12 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class Localization {
+public class DistributionRate {
 
     @EmbeddedId
-    private LocalizationId id;
+    private DistributionRateId id;
 
-    private Float percent;
+    private Float distributionRate;
 
     @ManyToOne
     @MapsId("scpiId")
@@ -25,12 +24,3 @@ public class Localization {
     private Scpi scpi;
 }
 
-@Embeddable
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-class LocalizationId implements java.io.Serializable {
-
-    private Integer scpiId;
-    private String country;
-}

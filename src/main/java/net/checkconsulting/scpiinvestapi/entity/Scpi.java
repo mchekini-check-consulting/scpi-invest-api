@@ -1,4 +1,4 @@
-package net.checkconsulting.scpiinvestapi.Entity;
+package net.checkconsulting.scpiinvestapi.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+import static jakarta.persistence.GenerationType.*;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +18,8 @@ import java.util.List;
 public class Scpi {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "scpi_seq_gen")
+    @SequenceGenerator(name = "scpi_seq_gen", sequenceName = "scpi_seq", allocationSize = 1)
     private Integer id;
     private String name;
     private Integer minimumSubscription;
@@ -28,10 +31,10 @@ public class Scpi {
     private String rentFrequency;
 
     @OneToMany(mappedBy = "scpi", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Localization> localisations;
+    private List<Localization> localizations;
 
     @OneToMany(mappedBy = "scpi", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DistributionRate> tauxDistributions;
+    private List<DistributionRate> distributionRate;
 
     @OneToMany(mappedBy = "scpi", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Sector> sectors;
