@@ -1,7 +1,7 @@
 package net.checkconsulting.scpiinvestapi.batch;
 
 import lombok.extern.slf4j.Slf4j;
-import net.checkconsulting.scpiinvestapi.dto.ScpiDto;
+import net.checkconsulting.scpiinvestapi.dto.ScpiBatchDto;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
@@ -31,7 +31,7 @@ public class ScpiReader {
                 "secteurs", "prix_part", "capitalisation", "Gérant", "frais_souscription", "frais_gestion",
                 "delai_jouissance", "fréquence_loyers", "valeur_reconstitution"})
                 .fieldSetMapper(fieldSet -> {
-                    ScpiDto scpi = new ScpiDto();
+                    ScpiBatchDto scpi = new ScpiBatchDto();
 
                     scpi.setName(fieldSet.readString(0));
                     scpi.setDistributionRate(fieldSet.readString(1));

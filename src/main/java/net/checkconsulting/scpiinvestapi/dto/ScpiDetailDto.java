@@ -5,12 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.Map;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class ScpiDto {
-
+public class ScpiDetailDto {
+    private Integer id;
     private String name;
     private Integer minimumSubscription;
     private Integer capitalization;
@@ -19,11 +22,10 @@ public class ScpiDto {
     private Integer managementFees;
     private Integer delayBenefit;
     private String rentFrequency;
-    private String distributionRate;
+    private List<Map<String, Object>> distributionRate;
     private String reconstitutionValue;
-    private String prices;
-    private String localizations;
-    private String sectors;
-
+    private List<Map<String, Object>> prices;
+    private List<Map<String, Object>> localizations;
+    private List<Map<String, Object>> sectors;
 
 }
