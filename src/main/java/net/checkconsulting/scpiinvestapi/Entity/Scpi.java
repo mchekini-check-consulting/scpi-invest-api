@@ -28,10 +28,10 @@ public class Scpi {
     private String rentFrequency;
 
     @OneToMany(mappedBy = "scpi", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Localization> localisations;
+    private List<Localization> localizations;
 
     @OneToMany(mappedBy = "scpi", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DistributionRate> tauxDistributions;
+    private List<DistributionRate> distributionRate;
 
     @OneToMany(mappedBy = "scpi", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Sector> sectors;

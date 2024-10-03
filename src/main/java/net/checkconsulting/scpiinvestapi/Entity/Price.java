@@ -25,11 +25,3 @@ public class Price {
     private Scpi scpi;
 }
 
-@Embeddable
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-class PriceId implements java.io.Serializable {
-    private Integer scpiId;
-    private Integer year;
-}

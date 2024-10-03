@@ -27,7 +27,7 @@ CREATE TABLE distribution_rate (
 
 CREATE TABLE sector (
                           scpi_id integer,
-                          sector integer,
+                          sector varchar,
                           percent float,
                           PRIMARY KEY (scpi_id, sector)
 );

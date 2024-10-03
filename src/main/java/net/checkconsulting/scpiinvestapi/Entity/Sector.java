@@ -24,11 +24,3 @@ public class Sector {
     private Scpi scpi;
 }
 
-@Embeddable
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-class SectorId implements java.io.Serializable {
-    private Integer scpiId;
-    private Integer sector;
-}

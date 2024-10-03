@@ -25,12 +25,3 @@ public class Localization {
     private Scpi scpi;
 }
 
-@Embeddable
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-class LocalizationId implements java.io.Serializable {
-
-    private Integer scpiId;
-    private String country;
-}

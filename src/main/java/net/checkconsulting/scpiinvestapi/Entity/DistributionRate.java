@@ -24,12 +24,3 @@ public class DistributionRate {
     private Scpi scpi;
 }
 
-@Embeddable
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-class DistributionRateId implements java.io.Serializable {
-
-    private Integer scpiId;
-    private Integer year;
-}
