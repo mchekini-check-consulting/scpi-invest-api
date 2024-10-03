@@ -4,7 +4,7 @@ import net.checkconsulting.scpiinvestapi.entity.Scpi;
 import net.checkconsulting.scpiinvestapi.batch.ScpiProcessor;
 import net.checkconsulting.scpiinvestapi.batch.ScpiReader;
 import net.checkconsulting.scpiinvestapi.batch.ScpiWriter;
-import net.checkconsulting.scpiinvestapi.dto.ScpiDto;
+import net.checkconsulting.scpiinvestapi.dto.ScpiBatchDto;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.FlowBuilder;
@@ -38,7 +38,7 @@ public class BatchConfiguration {
     public Step step(JobRepository jobRepository, PlatformTransactionManager transactionManager) throws IOException {
 
         return new StepBuilder("step", jobRepository)
-                .<ScpiDto, Scpi>chunk(1, transactionManager)
+                .<ScpiBatchDto, Scpi>chunk(1, transactionManager)
                 .reader(scpiReader.reader())
                 .processor(scpiProcessor)
                 .writer(scpiWriter)

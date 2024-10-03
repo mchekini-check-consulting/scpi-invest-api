@@ -1,7 +1,7 @@
 package net.checkconsulting.scpiinvestapi.batch;
 
 import lombok.extern.slf4j.Slf4j;
-import net.checkconsulting.scpiinvestapi.dto.ScpiDto;
+import net.checkconsulting.scpiinvestapi.dto.ScpiBatchDto;
 import net.checkconsulting.scpiinvestapi.entity.*;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
@@ -12,36 +12,36 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class ScpiProcessor implements ItemProcessor<ScpiDto, Scpi> {
+public class ScpiProcessor implements ItemProcessor<ScpiBatchDto, Scpi> {
 
     @Override
-    public Scpi process(ScpiDto scpiDto) throws Exception {
+    public Scpi process(ScpiBatchDto scpiBatchDto) throws Exception {
 
         Scpi scpi = Scpi.builder()
-                .name(scpiDto.getName())
-                .capitalization(scpiDto.getCapitalization())
-                .delayBenefit(scpiDto.getDelayBenefit())
-                .managementFees(scpiDto.getManagementFees())
-                .rentFrequency(scpiDto.getRentFrequency())
-                .manager(scpiDto.getManager())
-                .minimumSubscription(scpiDto.getMinimumSubscription())
-                .subscriptionFees(scpiDto.getSubscriptionFees())
+                .name(scpiBatchDto.getName())
+                .capitalization(scpiBatchDto.getCapitalization())
+                .delayBenefit(scpiBatchDto.getDelayBenefit())
+                .managementFees(scpiBatchDto.getManagementFees())
+                .rentFrequency(scpiBatchDto.getRentFrequency())
+                .manager(scpiBatchDto.getManager())
+                .minimumSubscription(scpiBatchDto.getMinimumSubscription())
+                .subscriptionFees(scpiBatchDto.getSubscriptionFees())
                 .build();
 
-        setDistributionRate(scpiDto, scpi);
-        setLocalizations(scpiDto, scpi);
-        setSectors(scpiDto, scpi);
-        setPricesAndReconstitutionsValue(scpiDto, scpi);
+        setDistributionRate(scpiBatchDto, scpi);
+        setLocalizations(scpiBatchDto, scpi);
+        setSectors(scpiBatchDto, scpi);
+        setPricesAndReconstitutionsValue(scpiBatchDto, scpi);
 
         return scpi;
     }
 
-    private void setPricesAndReconstitutionsValue(ScpiDto scpiDto, Scpi scpi) {
+    private void setPricesAndReconstitutionsValue(ScpiBatchDto scpiBatchDto, Scpi scpi) {
         List<Price> prices = new ArrayList<>();
 
         int date = LocalDate.now().getYear();
 
-        for (int i = 0; i < scpiDto.getPrices().split(",").length; i++) {
+        for (int i = 0; i < scpiBatchDto.getPrices().split(",").length; i++) {
 
             prices.add(Price.builder()
                     .id(PriceId.builder()
@@ -49,8 +49,8 @@ public class ScpiProcessor implements ItemProcessor<ScpiDto, Scpi> {
                             .year(date)
                             .build())
                     .scpi(scpi)
-                    .price(Float.valueOf(scpiDto.getPrices().split(",")[i]))
-                    .reconstitution(Float.valueOf(scpiDto.getReconstitutionValue().split(",")[i]))
+                    .price(Float.valueOf(scpiBatchDto.getPrices().split(",")[i]))
+                    .reconstitution(Float.valueOf(scpiBatchDto.getReconstitutionValue().split(",")[i]))
                     .build());
 
             date -= 1;
@@ -59,13 +59,13 @@ public class ScpiProcessor implements ItemProcessor<ScpiDto, Scpi> {
         scpi.setPrices(prices);
     }
 
-    private void setSectors(ScpiDto scpiDto, Scpi scpi) {
+    private void setSectors(ScpiBatchDto scpiBatchDto, Scpi scpi) {
         List<Sector> sectors = new ArrayList<>();
 
-        for (int i = 0; i < scpiDto.getSectors().split(",").length; i += 2) {
+        for (int i = 0; i < scpiBatchDto.getSectors().split(",").length; i += 2) {
 
-            String sector = scpiDto.getSectors().split(",")[i];
-            Float percent = Float.valueOf(scpiDto.getSectors().split(",")[i + 1]);
+            String sector = scpiBatchDto.getSectors().split(",")[i];
+            Float percent = Float.valueOf(scpiBatchDto.getSectors().split(",")[i + 1]);
 
             sectors.add(Sector.builder()
                     .id(SectorId.builder()
@@ -79,13 +79,13 @@ public class ScpiProcessor implements ItemProcessor<ScpiDto, Scpi> {
         scpi.setSectors(sectors);
     }
 
-    private void setLocalizations(ScpiDto scpiDto, Scpi scpi) {
+    private void setLocalizations(ScpiBatchDto scpiBatchDto, Scpi scpi) {
         List<Localization> localizations = new ArrayList<>();
 
-        for (int i = 0; i < scpiDto.getLocalizations().split(",").length; i += 2) {
+        for (int i = 0; i < scpiBatchDto.getLocalizations().split(",").length; i += 2) {
 
-            String country = scpiDto.getLocalizations().split(",")[i];
-            Float percent = Float.valueOf(scpiDto.getLocalizations().split(",")[i + 1]);
+            String country = scpiBatchDto.getLocalizations().split(",")[i];
+            Float percent = Float.valueOf(scpiBatchDto.getLocalizations().split(",")[i + 1]);
 
             localizations.add(Localization.builder()
                     .id(LocalizationId.builder()
@@ -99,12 +99,12 @@ public class ScpiProcessor implements ItemProcessor<ScpiDto, Scpi> {
         scpi.setLocalizations(localizations);
     }
 
-    private void setDistributionRate(ScpiDto scpiDto, Scpi scpi) {
+    private void setDistributionRate(ScpiBatchDto scpiBatchDto, Scpi scpi) {
         int date = LocalDate.now().getYear() - 1;
 
         List<DistributionRate> distributionRate = new ArrayList<>();
 
-        for (String s : scpiDto.getDistributionRate().split(",")) {
+        for (String s : scpiBatchDto.getDistributionRate().split(",")) {
 
             distributionRate.add(DistributionRate.builder()
                     .id(DistributionRateId.builder()
