@@ -6,6 +6,7 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,7 +22,11 @@ public class JobLauncherCommandLineRunner implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
+    }
+
+    @Scheduled(cron = "0 0 2 * * *")
+    public void executeBatchJob() throws Exception {
         JobParameters parameters = new JobParametersBuilder()
                 .addLong("timestamp", System.currentTimeMillis())
                 .toJobParameters();
