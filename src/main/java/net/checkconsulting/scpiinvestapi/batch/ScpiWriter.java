@@ -19,7 +19,6 @@ public class ScpiWriter implements ItemWriter<Scpi> {
 
     @Override
     public void write(Chunk<? extends Scpi> chunk) throws Exception {
-        scpiRepository.deleteAll();
         scpiRepository.saveAll(chunk.getItems());
     }
 }

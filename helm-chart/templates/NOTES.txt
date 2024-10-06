@@ -1,0 +1,1 @@
+SCPI Invest API deployed successfully

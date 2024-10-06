@@ -3,10 +3,10 @@ CREATE TABLE scpi
     id                   integer PRIMARY KEY,
     name                 varchar,
     minimum_subscription integer,
-    capitalization       integer,
+    capitalization       BIGINT,
     manager              varchar,
-    subscription_fees    integer,
-    management_fees      integer,
+    subscription_fees    float,
+    management_fees      float,
     delay_benefit        integer,
     rent_frequency       varchar
 );

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scpi-invest-api
+  labels:
+    app: scpi-invest-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scpi-invest-api
+  template:
+    metadata:
+      name: scpi-invest-api
+      labels:
+        app: scpi-invest-api
+    spec:
+      containers:
+        - name: scpi-invest-api
+          image: mchekini/scpi-invest-api:1.0
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: api-db-credentials
+      restartPolicy: Always

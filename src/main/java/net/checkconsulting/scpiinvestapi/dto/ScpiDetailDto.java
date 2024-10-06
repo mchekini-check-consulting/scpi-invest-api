@@ -15,10 +15,10 @@ public class ScpiDetailDto {
     private Integer id;
     private String name;
     private Integer minimumSubscription;
-    private Integer capitalization;
+    private Long capitalization;
     private String manager;
-    private Integer subscriptionFees;
-    private Integer managementFees;
+    private Float subscriptionFees;
+    private Float managementFees;
     private Integer delayBenefit;
     private String rentFrequency;
     private Map<Integer, Float> distributionRate;

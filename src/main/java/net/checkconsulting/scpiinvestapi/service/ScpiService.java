@@ -72,21 +72,21 @@ public class ScpiService {
         Optional<DistributionRate> maxDistributionRate = distributionRates.stream()
                 .max(Comparator.comparing(DistributionRate::getDistributionRate));
         return maxDistributionRate.map(item->item.getDistributionRate().toString())
-                .orElse("Aucune Distribution trouvé");
+                .orElse("N/A");
     }
 
     private String getMaxSectorPercent(List<Sector> sectors){
         Optional<Sector> maxSector = sectors.stream()
                 .max(Comparator.comparing(Sector::getPercent));
         return maxSector.map(item->item.getId().getSector())
-                .orElse("Aucun secteur trouvé");
+                .orElse("N/A");
     }
 
     private String getMaxLocalizationPorcent (List<Localization> localizations){
         Optional<Localization> maxLocalization = localizations.stream()
                 .max(Comparator.comparing(Localization:: getPercent));
         return maxLocalization.map(item->item.getId().getCountry())
-                .orElse("Aucun Pays Trouvé");
+                .orElse("N/A");
     }
 
 }

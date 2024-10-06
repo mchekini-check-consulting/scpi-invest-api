@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scpi-invest-db
+  labels:
+    app: scpi-invest-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scpi-invest-db
+  template:
+    metadata:
+      name: scpi-invest-db
+      labels:
+        app: scpi-invest-db
+    spec:
+      containers:
+        - name: scpi-invest-db
+          image: postgres
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: db-credentials
+      restartPolicy: Always
