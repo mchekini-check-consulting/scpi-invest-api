@@ -18,7 +18,7 @@ spec:
       containers:
         - name: scpi-invest-api
           image: mchekini/scpi-invest-api:1.0
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           envFrom:
             - secretRef:
                 name: api-db-credentials
