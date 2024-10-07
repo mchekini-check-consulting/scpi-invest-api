@@ -22,10 +22,11 @@ public class JobLauncherCommandLineRunner implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) {
+    public void run(String... args) throws Exception {
+        executeBatchJob();
     }
 
-    @Scheduled(cron = "0 0 2 * * *")
+//    @Scheduled(cron = "0 0 2 * * *")
     public void executeBatchJob() throws Exception {
         JobParameters parameters = new JobParametersBuilder()
                 .addLong("timestamp", System.currentTimeMillis())
