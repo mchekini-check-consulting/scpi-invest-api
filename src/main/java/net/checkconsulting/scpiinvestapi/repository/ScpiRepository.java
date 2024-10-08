@@ -15,7 +15,7 @@ public interface ScpiRepository extends JpaRepository<Scpi, Integer> {
             join Localization loc on s.id = loc.id.scpiId 
             join Sector sec on s.id = sec.id.scpiId
             WHERE (:searchTerm IS NULL OR s.name ILIKE %:searchTerm%)
-            AND (:amount = 0 OR s.minimumSubscription = :amount)
+            AND (:amount = 0 OR s.minimumSubscription <= :amount)
             AND ( :localizations IS NULL OR loc.id.country IN :localizations )
             And (:sectors IS NULL OR sec.id.sector IN :sectors )
             AND ( :fees IS NULL OR

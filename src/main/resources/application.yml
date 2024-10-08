@@ -4,6 +4,11 @@ spring:
     username: postgres
     password: postgres
     driverClassName: org.postgresql.Driver
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://keycloak.check-consulting.net/realms/master
 
   jpa:
     database: postgresql

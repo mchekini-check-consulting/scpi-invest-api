@@ -1,5 +1,6 @@
 package net.checkconsulting.scpiinvestapi.service;
 
+import lombok.extern.slf4j.Slf4j;
 import net.checkconsulting.scpiinvestapi.dto.ScpiDetailDto;
 import net.checkconsulting.scpiinvestapi.dto.ScpiMultiSearchInDto;
 import net.checkconsulting.scpiinvestapi.dto.ScpiOutDto;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 
 @Service
+@Slf4j
 public class ScpiService {
     private final ScpiRepository scpiRepository;
 
