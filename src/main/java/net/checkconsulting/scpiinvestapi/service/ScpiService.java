@@ -1,26 +1,41 @@
 package net.checkconsulting.scpiinvestapi.service;
 
 import net.checkconsulting.scpiinvestapi.dto.ScpiDetailDto;
+import net.checkconsulting.scpiinvestapi.dto.ScpiMultiSearchInDto;
 import net.checkconsulting.scpiinvestapi.dto.ScpiOutDto;
 import net.checkconsulting.scpiinvestapi.entity.*;
 import net.checkconsulting.scpiinvestapi.repository.ScpiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 @Service
 public class ScpiService {
     private final ScpiRepository scpiRepository;
 
     @Autowired
-    public ScpiService(ScpiRepository scpiRepository){
-        this.scpiRepository=scpiRepository;
+    public ScpiService(ScpiRepository scpiRepository) {
+        this.scpiRepository = scpiRepository;
     }
 
     public List<ScpiOutDto> findAllScpi() {
         return fromScpiToScpiDtoMapper(scpiRepository.findAll());
+    }
+
+    public List<ScpiOutDto> findScpiWithFilters(ScpiMultiSearchInDto scpiMultiSearchInDto) {
+        return fromScpiToScpiDtoMapper(
+                scpiRepository.searchScpiad(
+                        scpiMultiSearchInDto.getSearchTerm(),
+                        scpiMultiSearchInDto.getAmount(),
+                        scpiMultiSearchInDto.getFees(),
+                        scpiMultiSearchInDto.getLocalizations(),
+                        scpiMultiSearchInDto.getSectors()
+                ));
     }
 
     public ScpiDetailDto findScpiById(Integer id) throws Exception {
@@ -30,8 +45,8 @@ public class ScpiService {
         return fromScpiToScpiDetailDtoMapper(optionalScpi.get());
     }
 
-    public List<ScpiOutDto> fromScpiToScpiDtoMapper(List<Scpi> scpi){
-        return scpi.stream().map(item->ScpiOutDto.builder()
+    public List<ScpiOutDto> fromScpiToScpiDtoMapper(List<Scpi> scpi) {
+        return scpi.stream().map(item -> ScpiOutDto.builder()
                 .name(item.getName())
                 .sector(getMaxSectorPercent(item.getSectors()))
                 .localization(getMaxLocalizationPorcent(item.getLocalizations()))
@@ -68,25 +83,26 @@ public class ScpiService {
     }
 
 
-    private String getMaxDistributionRate(List<DistributionRate> distributionRates){
+    private String getMaxDistributionRate(List<DistributionRate> distributionRates) {
         Optional<DistributionRate> maxDistributionRate = distributionRates.stream()
                 .max(Comparator.comparing(DistributionRate::getDistributionRate));
-        return maxDistributionRate.map(item->item.getDistributionRate().toString())
+        return maxDistributionRate.map(item -> item.getDistributionRate().toString())
                 .orElse("N/A");
     }
 
-    private String getMaxSectorPercent(List<Sector> sectors){
+    private String getMaxSectorPercent(List<Sector> sectors) {
         Optional<Sector> maxSector = sectors.stream()
                 .max(Comparator.comparing(Sector::getPercent));
-        return maxSector.map(item->item.getId().getSector())
+        return maxSector.map(item -> item.getId().getSector())
                 .orElse("N/A");
     }
 
-    private String getMaxLocalizationPorcent (List<Localization> localizations){
+    private String getMaxLocalizationPorcent(List<Localization> localizations) {
         Optional<Localization> maxLocalization = localizations.stream()
-                .max(Comparator.comparing(Localization:: getPercent));
-        return maxLocalization.map(item->item.getId().getCountry())
+                .max(Comparator.comparing(Localization::getPercent));
+        return maxLocalization.map(item -> item.getId().getCountry())
                 .orElse("N/A");
     }
+
 
 }

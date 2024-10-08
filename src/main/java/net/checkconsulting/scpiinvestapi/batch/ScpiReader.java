@@ -39,7 +39,7 @@ public class ScpiReader {
                     scpi.setLocalizations(fieldSet.readString(3));
                     scpi.setSectors(fieldSet.readString(4));
                     scpi.setPrices(fieldSet.readString(5));
-                    scpi.setCapitalization(fieldSet.readString(6).equals("") ? 0 : Long.valueOf(fieldSet.readString(6)) / 1000000);
+                    scpi.setCapitalization(fieldSet.readString(6).equals("") ? 0L : Long.valueOf(fieldSet.readString(6)) / 1000000);
                     scpi.setManager(fieldSet.readString(7));
                     scpi.setSubscriptionFees(Float.valueOf(fieldSet.readString(8)));
                     scpi.setManagementFees(Float.valueOf(fieldSet.readString(9)));
