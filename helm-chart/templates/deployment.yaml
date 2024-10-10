@@ -22,4 +22,10 @@ spec:
           envFrom:
             - secretRef:
                 name: api-db-credentials
+          volumeMounts:
+            - name: app-logs
+              mountPath: /var/log/app
+      volumes:
+        - name: app-logs
+          emptyDir: { }
       restartPolicy: Always
