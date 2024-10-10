@@ -25,12 +25,5 @@ spring:
     job:
       enabled: false
 
-logging:
-  file:
-    name: /var/log/app/app.log
-  pattern:
-    console: '{"timestamp":"%d{yyyy-MM-dd HH:mm:ss}","level":"%p","thread":"%t","logger":"%c","message":"%m"}'
-
-
 server:
   port: 8080
