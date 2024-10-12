@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    username: sa
+    url: jdbc:h2:mem:test-db
+    driverClassName: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /db
+    password: scpi-invest
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create
+  flyway:
+    enabled: false
