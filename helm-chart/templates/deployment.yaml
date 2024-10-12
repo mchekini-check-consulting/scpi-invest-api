@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: scpi-invest-api
-          image: mchekini/scpi-invest-api:1.0
+          image: "{{.Values.image.repo}}/{{.Values.image.name}}:{{.Values.image.tag}}"
           imagePullPolicy: Always
           envFrom:
             - secretRef:
