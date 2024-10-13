@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pg-db
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: {{ if .Values.ingressPgWebPrefix }}{{ .Values.ingressPgWebPrefix }}.{{ end }}pg-db.check-consulting.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: pg-db
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - {{ if .Values.ingressPgWebPrefix }}{{ .Values.ingressPgWebPrefix }}.{{ end }}pg-db.check-consulting.net
+      secretName: pg-db-tls

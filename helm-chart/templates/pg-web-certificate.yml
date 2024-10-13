@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: pg-db-tls-int
+spec:
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: lets-encrypt
+  secretName: pg-db-tls
+  dnsNames:
+    - {{ if .Values.ingressPgWebPrefix }}{{ .Values.ingressPgWebPrefix }}.{{ end }}pg-db.check-consulting.net
+  usages:
+    - digital signature
+    - key encipherment
