@@ -19,8 +19,8 @@ public interface ScpiRepository extends JpaRepository<Scpi, Integer> {
             AND ( :localizations IS NULL OR loc.id.country IN :localizations )
             And (:sectors IS NULL OR sec.id.sector IN :sectors )
             AND ( :fees IS NULL OR
-                        (:fees = TRUE AND (s.managementFees > 0 OR s.managementFees IS NULL)) OR
-                        (:fees = FALSE AND (s.managementFees = 0 OR s.managementFees IS NULL))
+                        (:fees = TRUE AND (s.subscriptionFees > 0 OR s.subscriptionFees IS NULL)) OR
+                        (:fees = FALSE AND (s.subscriptionFees = 0 OR s.subscriptionFees IS NULL))
                    ) 
              OR (:searchTerm IS NULL AND :amount = 0 AND :localizations IS NULL AND :sectors IS NULL AND :fees IS NULL)
             """)
