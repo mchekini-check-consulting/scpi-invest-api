@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ScpiRepository extends JpaRepository<Scpi, Integer> {
@@ -30,4 +31,6 @@ public interface ScpiRepository extends JpaRepository<Scpi, Integer> {
                             List<String> localizations,
                             List<String> sectors
                           );
+
+    List<Scpi> findByName(String name);
 }
