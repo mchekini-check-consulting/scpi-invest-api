@@ -29,7 +29,7 @@ public class ScpiReader {
                 .delimiter(";")
                 .names(new String[]{"Nom", "taux_distribution", "minimum_souscription", "localisation",
                 "secteurs", "prix_part", "capitalisation", "Gérant", "frais_souscription", "frais_gestion",
-                "delai_jouissance", "fréquence_loyers", "valeur_reconstitution"})
+                "delai_jouissance", "fréquence_loyers", "valeur_reconstitution", "iban", "bic"})
                 .fieldSetMapper(fieldSet -> {
                     ScpiBatchDto scpi = new ScpiBatchDto();
 
@@ -46,6 +46,8 @@ public class ScpiReader {
                     scpi.setDelayBenefit(Integer.valueOf(fieldSet.readString(10)));
                     scpi.setRentFrequency(fieldSet.readString(11));
                     scpi.setReconstitutionValue(fieldSet.readString(12));
+                    scpi.setIban(fieldSet.readString(13));
+                    scpi.setBic(fieldSet.readString(14));
 
                     return scpi;
                 })
