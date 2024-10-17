@@ -19,6 +19,9 @@ spec:
         - name: scpi-invest-api
           image: "{{.Values.image.repo}}/{{.Values.image.name}}:{{.Values.image.tag}}"
           imagePullPolicy: Always
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value:  "{{.Values.application.environment }}"
           envFrom:
             - secretRef:
                 name: api-db-credentials

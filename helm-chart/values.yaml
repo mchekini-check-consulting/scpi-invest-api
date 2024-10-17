@@ -2,3 +2,6 @@ image:
   tag: latest
   repo: mchekini
   name: scpi-invest-api
+
+application:
+  environment: int
