@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-import static jakarta.persistence.GenerationType.*;
-
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -41,4 +39,5 @@ public class Scpi {
 
     @OneToMany(mappedBy = "scpi", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Price> prices;
+
 }
