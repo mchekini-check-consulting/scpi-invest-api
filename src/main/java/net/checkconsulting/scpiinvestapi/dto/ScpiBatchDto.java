@@ -24,4 +24,6 @@ public class ScpiBatchDto {
     private String prices;
     private String localizations;
     private String sectors;
+    private String iban;
+    private String bic;
 }

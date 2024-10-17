@@ -26,6 +26,8 @@ public class ScpiProcessor implements ItemProcessor<ScpiBatchDto, Scpi> {
                 .manager(scpiBatchDto.getManager())
                 .minimumSubscription(scpiBatchDto.getMinimumSubscription())
                 .subscriptionFees(scpiBatchDto.getSubscriptionFees())
+                .iban(scpiBatchDto.getIban())
+                .bic(scpiBatchDto.getBic())
                 .build();
 
         setDistributionRate(scpiBatchDto, scpi);
