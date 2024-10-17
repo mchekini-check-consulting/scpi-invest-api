@@ -29,6 +29,8 @@ public class Scpi {
     private Float managementFees;
     private Integer delayBenefit;
     private String rentFrequency;
+    private String iban;
+    private String bic;
 
     @OneToMany(mappedBy = "scpi", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Localization> localizations;

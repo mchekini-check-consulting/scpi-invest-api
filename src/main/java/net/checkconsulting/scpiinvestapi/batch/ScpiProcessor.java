@@ -16,7 +16,7 @@ public class ScpiProcessor implements ItemProcessor<ScpiBatchDto, Scpi> {
 
     @Override
     public Scpi process(ScpiBatchDto scpiBatchDto) throws Exception {
-
+        log.info("Processing SCPI with IBAN: {} and BIC: {}", scpiBatchDto.getIban(), scpiBatchDto.getBic());
         Scpi scpi = Scpi.builder()
                 .name(scpiBatchDto.getName())
                 .capitalization(scpiBatchDto.getCapitalization())
@@ -26,6 +26,8 @@ public class ScpiProcessor implements ItemProcessor<ScpiBatchDto, Scpi> {
                 .manager(scpiBatchDto.getManager())
                 .minimumSubscription(scpiBatchDto.getMinimumSubscription())
                 .subscriptionFees(scpiBatchDto.getSubscriptionFees())
+                .iban(scpiBatchDto.getIban())
+                .bic(scpiBatchDto.getBic())
                 .build();
 
         setDistributionRate(scpiBatchDto, scpi);
