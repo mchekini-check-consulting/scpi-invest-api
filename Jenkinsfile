@@ -27,6 +27,10 @@ node("ci-node"){
         sh "./mvnw package -DskipTests"
     }
 
+    stage("Archive Jar files"){
+        archiveArtifacts artifacts: 'target/scpi-invest-*.jar', followSymlinks: false
+    }
+
     stage("Build docker Image"){
         sh "sudo docker build -t mchekini/scpi-invest-api:$GIT_COMMIT_HASH ."
     }
