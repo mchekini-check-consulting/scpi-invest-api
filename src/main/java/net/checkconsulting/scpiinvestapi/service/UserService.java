@@ -22,6 +22,7 @@ import static org.springframework.web.context.WebApplicationContext.SCOPE_REQUES
 @Scope(scopeName = SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class UserService {
 
+    private String id;
     private String email;
     private String username;
     private String lastName;
@@ -31,6 +32,7 @@ public class UserService {
 
     public UserService() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        id =((Jwt) authentication.getPrincipal()).getClaims().get("sub").toString();
         username = ((Jwt) authentication.getPrincipal()).getClaims().get("preferred_username").toString();
         email = ((Jwt) authentication.getPrincipal()).getClaims().get("email").toString();
         lastName = ((Jwt) authentication.getPrincipal()).getClaims().get("family_name").toString();
