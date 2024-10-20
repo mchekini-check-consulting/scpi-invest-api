@@ -77,6 +77,9 @@ public class InvestmentService {
 
                 notificationClient.sendEmail(userService.getEmail(), "Validation de l'opération - Test",emailDetailsDto);
 
+                // Update the notified field (Store in Bdd)
+                savedInvest.setNotified(true);
+                investmentRepository.save(savedInvest);
 
                 response.setBic(scpi.getBic());
                 response.setIban(scpi.getIban());
