@@ -13,4 +13,5 @@ public class AppDetailsDto {
 
     private String applicationName;
     private String applicationVersion;
+    private String environment;
 }

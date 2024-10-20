@@ -1,3 +1,8 @@
+application:
+  name: SCPI-INVEST+
+  version: 1.0.0
+
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
@@ -27,3 +32,24 @@ spring:
 
 server:
   port: 8080
+
+
+logging:
+  level:
+    co.elastic.apm.agent: OFF
+
+
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  endpoint:
+    prometheus:
+      enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true

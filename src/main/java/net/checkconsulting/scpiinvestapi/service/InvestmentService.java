@@ -11,6 +11,7 @@ import net.checkconsulting.scpiinvestapi.enums.PropertyType;
 import net.checkconsulting.scpiinvestapi.feignClients.NotificationClient;
 import net.checkconsulting.scpiinvestapi.repository.InvestmentRepository;
 import net.checkconsulting.scpiinvestapi.repository.ScpiRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,6 +20,9 @@ import java.util.*;
 
 @Service
 public class InvestmentService {
+
+    @Value("{application.name}")
+    String applicationName;
 
     private final InvestmentRepository investmentRepository;
     private final UserService userService;
@@ -62,7 +66,7 @@ public class InvestmentService {
                         .investorName(userService.getUsername())
                         .investmentAmount(String.valueOf(totalAmount))
                         .investmentDuration(String.valueOf(invest.getStripping()))
-                        .companyName("SCPI INVEST +")
+                        .companyName(applicationName)
                         .sharePrice(String.valueOf(partPrice))
                         .scpiName(scpi.getName())
                         .iban(scpi.getIban())
@@ -71,7 +75,7 @@ public class InvestmentService {
                         .propertyType(investment.getPropertyType().name())
                         .build();
 
-                notificationClient.sendEmail("me.chekini@gmail.com", "confirmation",emailDetailsDto);
+                notificationClient.sendEmail(userService.getEmail(), "Validation de l'opération - Test",emailDetailsDto);
 
 
                 response.setBic(scpi.getBic());
