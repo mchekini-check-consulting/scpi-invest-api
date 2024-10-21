@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import net.checkconsulting.scpiinvestapi.dto.BankInfo;
 import net.checkconsulting.scpiinvestapi.dto.InvestmentDtoIn;
+import net.checkconsulting.scpiinvestapi.dto.PortfolioPerformanceDto;
 import net.checkconsulting.scpiinvestapi.service.InvestmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,12 +35,11 @@ public class InvestmentResource {
             @ApiResponse(responseCode = "500", description = "Erreur interne du serveur")
     })
     @GetMapping("/portfolio/performance")
-    public ResponseEntity<Map<String, Object>> getPortfolioPerformance() {
-        Map<String, Object> performance = investmentService.getPortfolioPerformance();
-        return ResponseEntity.ok(performance);
+    public ResponseEntity<PortfolioPerformanceDto> getPortfolioPerformance() {
+        return ResponseEntity.ok(investmentService.getPortfolioPerformance());
     }
 
-    @PostMapping()
+    @PostMapping
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Investment created successfully",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class))),

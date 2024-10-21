@@ -55,7 +55,7 @@ public class ScpiResource {
             @ApiResponse(responseCode = "400", description = "Requête invalide"),
             @ApiResponse(responseCode = "500", description = "Erreur interne du serveur")
     })
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity<List<ScpiOutDto>> getScpiByFilter(@RequestBody ScpiMultiSearchInDto scpiMultiSearchInDto) {
         return ResponseEntity.ok(scpiService.findScpiWithFilters(scpiMultiSearchInDto));
     }
