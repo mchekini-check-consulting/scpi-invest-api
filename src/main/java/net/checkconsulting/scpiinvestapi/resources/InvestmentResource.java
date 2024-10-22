@@ -27,6 +27,19 @@ public class InvestmentResource {
     public InvestmentResource(InvestmentService investmentService){
         this.investmentService = investmentService;
     }
+
+    @Operation(summary = "Récupérer Tous les investissments de l'utilisateur",
+            description = "Récupère la liste de tous les investissments")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "la liste des investissement est récupérée avec succès"),
+            @ApiResponse(responseCode = "400", description = "Requête invalide"),
+            @ApiResponse(responseCode = "500", description = "Erreur interne du serveur")
+    })
+    @GetMapping
+    public ResponseEntity<?> getUserInvestments() {
+        return ResponseEntity.status(HttpStatus.OK).body(this.investmentService.getUserInvestments());
+    }
+
     @Operation(summary = "Récupérer le portfolio des performances des investissement",
             description = "Récupère la performance du portefeuille par répartition géographique, répartition sectorielle et évolution des prix.")
     @ApiResponses(value = {
@@ -78,6 +91,5 @@ public class InvestmentResource {
             errorResponse.put("error", "An unexpected error occurred: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
-
     }
 }

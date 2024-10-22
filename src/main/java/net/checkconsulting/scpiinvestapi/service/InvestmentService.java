@@ -1,15 +1,13 @@
 package net.checkconsulting.scpiinvestapi.service;
 
-import net.checkconsulting.scpiinvestapi.dto.BankInfo;
-import net.checkconsulting.scpiinvestapi.dto.EmailDetailsDto;
-import net.checkconsulting.scpiinvestapi.dto.InvestmentDtoIn;
-import net.checkconsulting.scpiinvestapi.dto.PortfolioPerformanceDto;
+import net.checkconsulting.scpiinvestapi.dto.*;
 import net.checkconsulting.scpiinvestapi.entity.Investment;
 import net.checkconsulting.scpiinvestapi.entity.Price;
 import net.checkconsulting.scpiinvestapi.entity.Scpi;
 import net.checkconsulting.scpiinvestapi.enums.InvestStatus;
 import net.checkconsulting.scpiinvestapi.enums.PropertyType;
 import net.checkconsulting.scpiinvestapi.feignClients.NotificationClient;
+import net.checkconsulting.scpiinvestapi.mapper.InvestmentMapper;
 import net.checkconsulting.scpiinvestapi.repository.InvestmentRepository;
 import net.checkconsulting.scpiinvestapi.repository.ScpiRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,13 +31,15 @@ public class InvestmentService {
     private final UserService userService;
     private final ScpiRepository scpiRepository;
     private final NotificationClient notificationClient;
+    private final InvestmentMapper investmentMapper;
 
 
-    public InvestmentService(InvestmentRepository investmentRepository, UserService userService, ScpiRepository scpiRepository, NotificationClient notificationClient) {
+    public InvestmentService(InvestmentRepository investmentRepository, UserService userService, ScpiRepository scpiRepository, NotificationClient notificationClient, InvestmentMapper investmentMapper) {
         this.investmentRepository = investmentRepository;
         this.userService = userService;
         this.scpiRepository = scpiRepository;
         this.notificationClient = notificationClient;
+        this.investmentMapper = investmentMapper;
     }
 
     public BankInfo createInvestment(InvestmentDtoIn invest) {
@@ -153,5 +153,8 @@ public class InvestmentService {
         return Map.entry(String.valueOf(map.get("country")), map.get("percent").intValue());
     }
 
-
+    public List<InvestmentOutDto> getUserInvestments() {
+        List<InvestmentOutDto> investmentOutDtos = investmentRepository.findByUserEmail(userService.getEmail()).stream().map(investmentMapper::mapToInvestmentOutDto).toList();
+        return investmentOutDtos;
+    }
 }
