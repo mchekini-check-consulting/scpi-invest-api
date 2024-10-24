@@ -20,7 +20,6 @@ public class Investment {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "scpi_seq_gen")
     @SequenceGenerator(name = "scpi_seq_gen", sequenceName = "scpi_seq", allocationSize = 1)
-
     private Integer id;
     private String userEmail;
     @Enumerated(EnumType.STRING)

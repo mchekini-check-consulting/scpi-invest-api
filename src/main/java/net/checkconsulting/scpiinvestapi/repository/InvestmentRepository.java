@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Map;
 
-public interface InvestmentRepository extends JpaRepository<Investment, String> {
+public interface InvestmentRepository extends JpaRepository<Investment, Integer> {
     @Query("""
             SELECT i FROM Investment i WHERE i.userEmail = :userEmail
             """)
