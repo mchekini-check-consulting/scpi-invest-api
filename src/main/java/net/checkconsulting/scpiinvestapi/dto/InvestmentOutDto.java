@@ -20,6 +20,6 @@ public class InvestmentOutDto {
     private LocalDateTime requestDate;
     private LocalDateTime investmentValidationDate;
     private Float totalAmount;
-    private Float totalReconstitutionValue;
+    private Float currentValue;
     private Float distributionRate;
 }
