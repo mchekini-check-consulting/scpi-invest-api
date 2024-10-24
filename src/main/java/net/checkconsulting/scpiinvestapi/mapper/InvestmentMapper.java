@@ -6,13 +6,15 @@ import net.checkconsulting.scpiinvestapi.entity.Scpi;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.Comparator;
+
 @Mapper(componentModel = "spring")
 public interface InvestmentMapper {
 
     @Mapping(target = "scpiId", expression = "java(investment.getScpi().getId())")
     @Mapping(target = "scpiName", expression = "java(investment.getScpi().getName())")
     @Mapping(target = "distributionRate", expression = "java(getLastYearDistributionRate(investment.getScpi()))")
-    @Mapping(target = "totalReconstitutionValue", expression = "java(getReconstitutionValueOfAllParts(investment.getScpi(), investment.getNumberOfShares()))")
+    @Mapping(target = "currentValue", expression = "java(getCurrentValue(investment.getScpi(), investment.getNumberOfShares()))")
     @Mapping(target = "investmentValidationDate", source = "statusChangeDate")
     InvestmentOutDto mapToInvestmentOutDto(Investment investment);
 
@@ -20,7 +22,7 @@ public interface InvestmentMapper {
          return  scpi.getDistributionRate().get(0).getDistributionRate();
     }
 
-    default Float getReconstitutionValueOfAllParts(Scpi scpi, Integer numberOfParts) {
-        return scpi.getPrices().get(0).getReconstitution() * numberOfParts;
+    default Float getCurrentValue(Scpi scpi, Integer numberOfParts) {
+        return scpi.getPrices().stream().max(Comparator.comparingInt(p -> p.getId().getYear())).get().getPrice() * numberOfParts;
     }
 }
