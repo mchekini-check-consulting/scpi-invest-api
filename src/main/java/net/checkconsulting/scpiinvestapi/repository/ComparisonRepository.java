@@ -26,9 +26,9 @@ public interface ComparisonRepository extends JpaRepository<Scpi, Integer> {
             )
             FROM Scpi s
             JOIN DistributionRate d ON s.id = d.id.scpiId
-            WHERE s.id IN :id
+            WHERE s.name IN :selectedScpis
             """)
-    List<ScpiComparatorOutDto> getInfoScpiForComparison(List<Integer> id, double investValue);
+    List<ScpiComparatorOutDto> getInfoScpiForComparison(List<String> selectedScpis, double investValue);
 
 
 }

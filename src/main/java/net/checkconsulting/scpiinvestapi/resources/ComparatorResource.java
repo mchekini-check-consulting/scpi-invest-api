@@ -25,13 +25,13 @@ public class ComparatorResource {
 
     @PostMapping("/compare")
     public List<ScpiComparatorOutDto> getInfoScpiForComparison(@RequestBody ComparisonRequest request) {
-        return comparatorService.getInfoScpiForComparison(request.getIds(), request.getInvestValue());
+        return comparatorService.getInfoScpiForComparison(request.selectedScpis, request.getInvestValue());
     }
 
     @Setter
     @Getter
     public static class ComparisonRequest {
-        private List<Integer> ids;
+        private List<String> selectedScpis;
         private double investValue;
 
     }

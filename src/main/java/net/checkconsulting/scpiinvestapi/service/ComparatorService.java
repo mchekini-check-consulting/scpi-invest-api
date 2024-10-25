@@ -19,7 +19,7 @@ public class ComparatorService {
         this.comparisonRepository = comparisonRepository;
     }
 
-    public List<ScpiComparatorOutDto> getInfoScpiForComparison(List<Integer> idList, double investValue) {
-        return comparisonRepository.getInfoScpiForComparison(idList, investValue);
+    public List<ScpiComparatorOutDto> getInfoScpiForComparison(List<String> selectedScpis, double investValue) {
+        return comparisonRepository.getInfoScpiForComparison(selectedScpis, investValue);
     }
 }
