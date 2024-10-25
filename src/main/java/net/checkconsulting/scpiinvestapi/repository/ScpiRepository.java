@@ -1,7 +1,5 @@
 package net.checkconsulting.scpiinvestapi.repository;
 
-import net.checkconsulting.scpiinvestapi.dto.ComparatorDto;
-import net.checkconsulting.scpiinvestapi.dto.ScpiOutDto;
 import net.checkconsulting.scpiinvestapi.entity.Scpi;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -35,20 +33,6 @@ public interface ScpiRepository extends JpaRepository<Scpi, Integer> {
 
     List<Scpi> findByName(String name);
 
-    List<Scpi> findByIdIn(List<Integer> ids);
 
-//    @Query("""
-//    SELECT s.name AS name,
-//           (:investValue * d.distributionRate / 100) / 12 AS rendementMensuel,
-//           (:investValue * s.subscriptionFees / 100) AS fraisDeSouscription,
-//           (:investValue * 0.04) AS cashback,
-//           s.capitalization AS capitalization,
-//           s.rentFrequency AS rentFrequency,
-//           s.delayBenefit AS delayBenefit
-//    FROM Scpi s
-//    JOIN DistributionRate d ON s.id = d.id.scpiId
-//    WHERE s.id IN :id
-//    """)
-//    List<ComparatorDto> getInfoScpiForComparison(List<Integer> id,
-//                                                 double investValue);
+
 }

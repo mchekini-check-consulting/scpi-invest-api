@@ -9,14 +9,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ComparatorDto {
-    private Long id;
+
+public class ScpiComparatorOutDto {
+    private Integer id;
     private String name;
     private Double monthlyRevenue;
     private Double subscriptionFees;
     private Double cashback;
-    private Integer capitalization;
+    private Long capitalization;
     private String rentFrequency;
     private Integer entryDelay;
-    private Integer minInvestment;
+    private Integer minimumSubscription;
+
 }
+

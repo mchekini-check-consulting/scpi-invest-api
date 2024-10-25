@@ -4,7 +4,6 @@ package net.checkconsulting.scpiinvestapi.resources;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import net.checkconsulting.scpiinvestapi.dto.ComparatorDto;
 import net.checkconsulting.scpiinvestapi.dto.ScpiDetailDto;
 import net.checkconsulting.scpiinvestapi.dto.ScpiMultiSearchInDto;
 import net.checkconsulting.scpiinvestapi.dto.ScpiOutDto;
@@ -60,29 +59,6 @@ public class ScpiResource {
     public ResponseEntity<List<ScpiOutDto>> getScpiByFilter(@RequestBody ScpiMultiSearchInDto scpiMultiSearchInDto) {
         return ResponseEntity.ok(scpiService.findScpiWithFilters(scpiMultiSearchInDto));
     }
-    @PostMapping("/compare")
-    public List<ComparatorDto> getInfoScpiForComparison(@RequestBody ComparisonRequest request) {
-        return scpiService.getInfoScpiForComparison(request.getIds(), request.getInvestValue());
-    }
-    public static class ComparisonRequest {
-        private List<Integer> ids;
-        private double investValue;
 
-        public List<Integer> getIds() {
-            return ids;
-        }
-
-        public void setIds(List<Integer> ids) {
-            this.ids = ids;
-        }
-
-        public double getInvestValue() {
-            return investValue;
-        }
-
-        public void setInvestValue(double investValue) {
-            this.investValue = investValue;
-        }
-    }
 
 }
