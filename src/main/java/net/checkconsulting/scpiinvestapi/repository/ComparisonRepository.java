@@ -13,7 +13,7 @@ public interface ComparisonRepository extends JpaRepository<Scpi, Integer> {
 
 
     @Query("""
-            SELECT new net.checkconsulting.scpiinvestapi.dto.ComparatorDto(
+            SELECT new net.checkconsulting.scpiinvestapi.dto.ScpiComparatorOutDto(
                 s.id,
                 s.name,
                 CAST((:investValue * d.distributionRate / 100) / 12 AS double),

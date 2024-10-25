@@ -11,8 +11,8 @@ import java.util.List;
 public interface ScpiRepository extends JpaRepository<Scpi, Integer> {
 
     @Query("""
-            SELECT s FROM Scpi s 
-            join Localization loc on s.id = loc.id.scpiId 
+            SELECT s FROM Scpi s
+            join Localization loc on s.id = loc.id.scpiId\s
             join Sector sec on s.id = sec.id.scpiId
             WHERE (:searchTerm IS NULL OR s.name ILIKE %:searchTerm%)
             AND (:amount = 0 OR s.minimumSubscription <= :amount)
@@ -21,9 +21,9 @@ public interface ScpiRepository extends JpaRepository<Scpi, Integer> {
             AND ( :fees IS NULL OR
                         (:fees = TRUE AND (s.subscriptionFees > 0 OR s.subscriptionFees IS NULL)) OR
                         (:fees = FALSE AND (s.subscriptionFees = 0 OR s.subscriptionFees IS NULL))
-                   ) 
+                   )\s
              OR (:searchTerm IS NULL AND :amount = 0 AND :localizations IS NULL AND :sectors IS NULL AND :fees IS NULL)
-            """)
+           """)
     List<Scpi> searchScpiad(String searchTerm,
                            double amount,
                             Boolean fees,

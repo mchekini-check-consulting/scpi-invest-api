@@ -1,5 +1,7 @@
 package net.checkconsulting.scpiinvestapi.resources;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.checkconsulting.scpiinvestapi.dto.ScpiComparatorOutDto;
 import net.checkconsulting.scpiinvestapi.service.ComparatorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,24 +28,11 @@ public class ComparatorResource {
         return comparatorService.getInfoScpiForComparison(request.getIds(), request.getInvestValue());
     }
 
+    @Setter
+    @Getter
     public static class ComparisonRequest {
         private List<Integer> ids;
         private double investValue;
 
-        public List<Integer> getIds() {
-            return ids;
-        }
-
-        public void setIds(List<Integer> ids) {
-            this.ids = ids;
-        }
-
-        public double getInvestValue() {
-            return investValue;
-        }
-
-        public void setInvestValue(double investValue) {
-            this.investValue = investValue;
-        }
     }
 }
