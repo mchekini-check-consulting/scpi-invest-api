@@ -49,4 +49,6 @@ public class ScpiService {
 
         return scpiMapper.mapToScpiDetailDto(optionalScpi.get());
     }
+
+
 }

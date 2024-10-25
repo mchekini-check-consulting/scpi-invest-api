@@ -59,4 +59,6 @@ public class ScpiResource {
     public ResponseEntity<List<ScpiOutDto>> getScpiByFilter(@RequestBody ScpiMultiSearchInDto scpiMultiSearchInDto) {
         return ResponseEntity.ok(scpiService.findScpiWithFilters(scpiMultiSearchInDto));
     }
+
+
 }
