@@ -31,6 +31,10 @@ public class Scpi {
     private String rentFrequency;
     private String iban;
     private String bic;
+    private Boolean isStripping;
+    private Float cashback;
+    private Boolean isPlanedInvestment;
+    private String advertising;
 
     @OneToMany(mappedBy = "scpi", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Localization> localizations;
@@ -43,4 +47,8 @@ public class Scpi {
 
     @OneToMany(mappedBy = "scpi", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Price> prices;
+
+    @OneToMany(mappedBy = "scpi", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DiscountStripping> discountStripping;
+
 }

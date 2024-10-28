@@ -26,4 +26,10 @@ public class ScpiBatchDto {
     private String sectors;
     private String iban;
     private String bic;
+    private String discountStripping;
+    private Boolean isStripping;
+    private Float cashback;
+    private Boolean isPlanedInvestment;
+    private String advertising;
+
 }
