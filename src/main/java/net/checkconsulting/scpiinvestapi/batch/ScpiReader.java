@@ -29,7 +29,8 @@ public class ScpiReader {
                 .delimiter(";")
                 .names(new String[]{"Nom", "taux_distribution", "minimum_souscription", "localisation",
                 "secteurs", "prix_part", "capitalisation", "Gérant", "frais_souscription", "frais_gestion",
-                "delai_jouissance", "fréquence_loyers", "valeur_reconstitution", "iban", "bic"})
+                "delai_jouissance", "fréquence_loyers", "valeur_reconstitution", "iban", "bic",
+                        "decote_demembrement", "demembrement", "cashback", "versement_programme", "publicite"})
                 .fieldSetMapper(fieldSet -> {
                     ScpiBatchDto scpi = new ScpiBatchDto();
 
@@ -48,6 +49,11 @@ public class ScpiReader {
                     scpi.setReconstitutionValue(fieldSet.readString(12));
                     scpi.setIban(fieldSet.readString(13));
                     scpi.setBic(fieldSet.readString(14));
+                    scpi.setDiscountStripping(fieldSet.readString(15));
+                    scpi.setIsStripping(fieldSet.readString(16).equals("Oui"));
+                    scpi.setCashback(fieldSet.readFloat(17));
+                    scpi.setIsPlanedInvestment(fieldSet.readString(18).equals("Oui"));
+                    scpi.setAdvertising(fieldSet.readString(19));
 
                     return scpi;
                 })
