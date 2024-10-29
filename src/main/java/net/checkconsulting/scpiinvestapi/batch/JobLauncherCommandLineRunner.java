@@ -29,7 +29,7 @@ public class JobLauncherCommandLineRunner implements CommandLineRunner {
 //    @Scheduled(cron = "0 0 2 * * *")
     public void executeBatchJob() throws Exception {
         JobParameters parameters = new JobParametersBuilder()
-//                .addLong("timestamp", System.currentTimeMillis())
+                .addLong("timestamp", System.currentTimeMillis())
                 .toJobParameters();
 
         JobExecution jobExecution = jobLauncher.run(migrationJob, parameters);
