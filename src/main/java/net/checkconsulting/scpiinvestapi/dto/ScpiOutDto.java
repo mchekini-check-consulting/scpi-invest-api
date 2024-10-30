@@ -10,10 +10,12 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class ScpiOutDto {
+
     private Integer id;
     private String name;
     private String sector;
     private String localization;
     private Integer minimumSubscription;
     private String lastYearDistributionRate;
+    private Boolean isPlanedInvestment;
 }
