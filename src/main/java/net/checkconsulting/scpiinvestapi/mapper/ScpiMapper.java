@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface ScpiMapper {
 
-    @Mapping(target = "lastYearDistributionRate", expression = "java(getMaxDistributionRate(scpi.getDistributionRate()))")
+    @Mapping(target = "lastYearDistributionRate", expression = "java(getLastDistributionRate(scpi.getDistributionRate()))")
     @Mapping(target = "sector", expression = "java(getMaxSectorPercent(scpi.getSectors()))")
     @Mapping(target = "localization", expression = "java(getMaxLocalizationPercent(scpi.getLocalizations()))")
     ScpiOutDto mapToScpiOutDto(Scpi scpi);
@@ -53,11 +53,10 @@ public interface ScpiMapper {
                 .collect(Collectors.toMap(sector -> sector.getId().getSector(), Sector::getPercent));
     }
 
-    default String getMaxDistributionRate(List<DistributionRate> distributionRates) {
-        Optional<DistributionRate> maxDistributionRate = distributionRates.stream()
-                .max(Comparator.comparing(DistributionRate::getDistributionRate));
-        return maxDistributionRate.map(item -> item.getDistributionRate().toString())
-                .orElse("N/A");
+    default String getLastDistributionRate(List<DistributionRate> distributionRates) {
+        return distributionRates.stream()
+                .max(Comparator.comparing(dr -> dr.getId().getYear()))
+                .map(dr -> dr.getDistributionRate().toString()).orElse("N/A");
     }
 
     default String getMaxSectorPercent(List<Sector> sectors) {

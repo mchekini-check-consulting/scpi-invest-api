@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-import static jakarta.persistence.GenerationType.*;
-
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,19 +34,19 @@ public class Scpi {
     private Boolean isPlanedInvestment;
     private String advertising;
 
-    @OneToMany(mappedBy = "scpi", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "scpi", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<Localization> localizations;
 
-    @OneToMany(mappedBy = "scpi", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "scpi", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<DistributionRate> distributionRate;
 
-    @OneToMany(mappedBy = "scpi", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "scpi", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<Sector> sectors;
 
-    @OneToMany(mappedBy = "scpi", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "scpi", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<Price> prices;
 
-    @OneToMany(mappedBy = "scpi", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "scpi", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<DiscountStripping> discountStripping;
 
 }

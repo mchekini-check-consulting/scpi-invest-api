@@ -18,6 +18,7 @@ public class ScpiDetailDto {
     private Long capitalization;
     private String manager;
     private Float subscriptionFees;
+    private String advertising;
     private Float managementFees;
     private Integer delayBenefit;
     private String rentFrequency;
