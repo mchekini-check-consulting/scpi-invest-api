@@ -27,5 +27,5 @@ public class ScpiDetailDto {
     private Map<Integer, Float> prices;
     private Map<String, Float> localizations;
     private Map<String, Float> sectors;
-
+    private Float cashback;
 }
