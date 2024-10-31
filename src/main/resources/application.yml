@@ -3,6 +3,15 @@ application:
   version: 1.0.0
 
 
+keycloak:
+  serverUrl: https://keycloak.check-consulting.net
+  realm: master
+  clientId: scpi-invest
+  adminUsername: admin
+  adminPassword: admin
+
+
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
