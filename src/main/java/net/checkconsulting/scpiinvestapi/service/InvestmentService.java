@@ -20,11 +20,13 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static net.checkconsulting.scpiinvestapi.enums.EmailType.REQUEST_VERSMENT;
+
 
 @Service
 public class InvestmentService {
 
-    @Value("{application.name}")
+    @Value("${application.name}")
     String applicationName;
 
     private final InvestmentRepository investmentRepository;
@@ -77,6 +79,7 @@ public class InvestmentService {
                     .bic(scpi.getBic())
                     .numberOfShares(String.valueOf(invest.getNumberOfShares()))
                     .propertyType(investment.getPropertyType().name())
+                    .emailType(REQUEST_VERSMENT)
                     .build();
 
             notificationClient.sendEmail(userService.getEmail(), "Validation de l'opération - Test", emailDetailsDto);

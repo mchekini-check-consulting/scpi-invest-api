@@ -1,9 +1,12 @@
 package net.checkconsulting.scpiinvestapi.repository;
 
 import net.checkconsulting.scpiinvestapi.entity.Investment;
+import net.checkconsulting.scpiinvestapi.enums.InvestStatus;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -31,4 +34,8 @@ public interface InvestmentRepository extends JpaRepository<Investment, Integer>
             group by s.id.sector
             """)
     List<Map<String, Double>> getPortfolioSectorsByUser(String userEmail);
+
+
+    @EntityGraph(attributePaths = {"scpi", "scpi.prices"})
+    List<Investment> findInvestmentByRequestDateIsBetweenAndInvestmentStatusEquals(LocalDateTime startDate, LocalDateTime endDate, InvestStatus investStatus);
 }
