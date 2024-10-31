@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.checkconsulting.scpiinvestapi.enums.EmailType;
 
 @Data
 @AllArgsConstructor
@@ -21,4 +22,5 @@ public class EmailDetailsDto {
     private String iban;
     private String bic;
     private String companyName;
+    private EmailType emailType;
 }
