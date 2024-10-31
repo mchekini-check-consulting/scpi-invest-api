@@ -6,6 +6,7 @@ import net.checkconsulting.scpiinvestapi.entity.Price;
 import net.checkconsulting.scpiinvestapi.entity.Scpi;
 import net.checkconsulting.scpiinvestapi.enums.InvestStatus;
 import net.checkconsulting.scpiinvestapi.enums.PropertyType;
+import net.checkconsulting.scpiinvestapi.feignClients.InvestmentInfo;
 import net.checkconsulting.scpiinvestapi.feignClients.NotificationClient;
 import net.checkconsulting.scpiinvestapi.mapper.InvestmentMapper;
 import net.checkconsulting.scpiinvestapi.repository.InvestmentRepository;
@@ -34,14 +35,16 @@ public class InvestmentService {
     private final ScpiRepository scpiRepository;
     private final NotificationClient notificationClient;
     private final InvestmentMapper investmentMapper;
+    private final InvestmentInfo investmentInfo;
 
 
-    public InvestmentService(InvestmentRepository investmentRepository, UserService userService, ScpiRepository scpiRepository, NotificationClient notificationClient, InvestmentMapper investmentMapper) {
+    public InvestmentService(InvestmentRepository investmentRepository, UserService userService, ScpiRepository scpiRepository, NotificationClient notificationClient, InvestmentMapper investmentMapper, InvestmentInfo investmentInfo) {
         this.investmentRepository = investmentRepository;
         this.userService = userService;
         this.scpiRepository = scpiRepository;
         this.notificationClient = notificationClient;
         this.investmentMapper = investmentMapper;
+        this.investmentInfo = investmentInfo;
     }
 
     public BankInfo createInvestment(InvestmentDtoIn invest) {
@@ -82,9 +85,7 @@ public class InvestmentService {
                     .emailType(REQUEST_VERSMENT)
                     .build();
 
-            notificationClient.sendEmail(userService.getEmail(), "Validation de l'opération - Test", emailDetailsDto);
 
-            // Update the notified field (Store in Bdd)
             savedInvest.setNotified(true);
             investmentRepository.save(savedInvest);
 
@@ -92,6 +93,18 @@ public class InvestmentService {
             response.setIban(scpi.getIban());
             response.setLabel("SCPI-INVEST-" + savedInvest.getId());
             response.setTotal(totalAmount);
+
+            InvestmentInfoDto investmentInfoDto = InvestmentInfoDto.builder()
+                    .totalAmount(totalAmount)
+                    .partnerName(scpi.getName())
+                    .numberOfShares(invest.getNumberOfShares())
+                    .propertyType(investment.getPropertyType().name())
+                    .stripping(invest.getStripping())
+                    .investmentLabel("SCPI-INVEST-" + savedInvest.getId())
+                    .build();
+            investmentInfo.sendInvestmentInfo(investmentInfoDto);
+            notificationClient.sendEmail(userService.getEmail(), "Validation de l'opération - Test", emailDetailsDto);
+
 
         } else {
             throw new NoSuchElementException("SCPI with id " + invest.getScpiId() + " not found");
