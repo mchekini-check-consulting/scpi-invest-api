@@ -18,4 +18,5 @@ public class ScpiOutDto {
     private Integer minimumSubscription;
     private String lastYearDistributionRate;
     private Boolean isPlanedInvestment;
+    private Float cashback;
 }
