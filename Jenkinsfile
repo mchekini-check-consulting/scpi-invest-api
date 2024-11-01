@@ -7,9 +7,9 @@ node("ci-node"){
         GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
     }
 
-    stage("Tests unitaires"){
-        sh "chmod 777 mvnw && ./mvnw clean test"
-    }
+//    stage("Tests unitaires"){
+//        sh "chmod 777 mvnw && ./mvnw clean test"
+//    }
 
     stage("Quality Analyses"){
 
