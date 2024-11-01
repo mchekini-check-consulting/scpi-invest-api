@@ -1,8 +1,10 @@
 package net.checkconsulting.scpiinvestapi.service;
 
 import net.checkconsulting.scpiinvestapi.dto.PlanifiedInvestmentDto;
+import net.checkconsulting.scpiinvestapi.dto.PlannedInvestementEmailDto;
 import net.checkconsulting.scpiinvestapi.entity.PlanifiedInvestment;
 import net.checkconsulting.scpiinvestapi.enums.InvestStatus;
+import net.checkconsulting.scpiinvestapi.feignClients.NotificationClient;
 import net.checkconsulting.scpiinvestapi.repository.PlanifiedInvestmentRepository;
 import net.checkconsulting.scpiinvestapi.repository.ScpiRepository;
 import org.springframework.stereotype.Service;
@@ -15,11 +17,13 @@ public class PlanifiedInvestmentService {
     private final PlanifiedInvestmentRepository planifiedInvestmentRepository;
     private final UserService userService;
     private final ScpiRepository scpiRepository;
+    private final NotificationClient notificationClient;
 
-    public PlanifiedInvestmentService(PlanifiedInvestmentRepository planifiedInvestmentRepository, UserService userService, ScpiRepository scpiRepository) {
+    public PlanifiedInvestmentService(PlanifiedInvestmentRepository planifiedInvestmentRepository, UserService userService, ScpiRepository scpiRepository, NotificationClient notificationClient) {
         this.planifiedInvestmentRepository = planifiedInvestmentRepository;
         this.userService = userService;
         this.scpiRepository = scpiRepository;
+        this.notificationClient = notificationClient;
     }
 
 
@@ -37,7 +41,16 @@ public class PlanifiedInvestmentService {
                 .amount(planifiedInvestmentDto.getAmount())
                 .build();
 
-        return planifiedInvestmentRepository.save(planifiedInvestment).getId();
+        Integer planifiedInvestement= planifiedInvestmentRepository.save(planifiedInvestment).getId();
+
+        PlannedInvestementEmailDto plannedInvestementEmailDto =  PlannedInvestementEmailDto.builder()
+                .investorName(userService.getUsername())
+                .plannedInvestmentId(String.valueOf(planifiedInvestement))
+                .build();
+
+        notificationClient.sendEmailPlannedInvest(userService.getEmail(), "Confirmation de votre demande de planification de versement",plannedInvestementEmailDto);
+
+        return planifiedInvestement;
 
     }
 }
