@@ -13,6 +13,7 @@ node("ci-node"){
 
     stage("Quality Analyses"){
 
+        sh "chmod 777 mvnw"
         withCredentials([usernamePassword(credentialsId: 'sonar-token', passwordVariable: 'password', usernameVariable: 'username')]) {
                  sh "./mvnw clean verify sonar:sonar \\\n" +
                          "  -Dsonar.projectKey=scpi-invest-api \\\n" +
