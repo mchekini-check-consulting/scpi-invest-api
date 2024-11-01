@@ -29,6 +29,9 @@ public interface InvestmentMapper {
     }
 
     default Long calculateNumberOfDetentionDate(LocalDateTime date){
+
+        if (date == null) return 0L;
+
         return Duration.between(date, LocalDateTime.now()).toDays();
     }
 }

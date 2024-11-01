@@ -49,7 +49,9 @@ server:
 
 logging:
   level:
-    co.elastic.apm.agent: OFF
+    org:
+      springframework:
+        kafka: ERROR
 
 
 
