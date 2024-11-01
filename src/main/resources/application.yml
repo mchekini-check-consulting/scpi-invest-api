@@ -52,6 +52,11 @@ logging:
     org:
       springframework:
         kafka: ERROR
+    java:
+      net: ERROR
+    org:
+      apache:
+        kafka: ERROR
 
 
 
