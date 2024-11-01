@@ -16,7 +16,7 @@ keycloak:
 
 spring:
   kafka:
-    bootstrap-servers: kafka.kafka:9094
+    bootstrap-servers: kafka-svc.kafka-ns:9094
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
