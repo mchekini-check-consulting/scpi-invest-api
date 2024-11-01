@@ -27,7 +27,7 @@ public class KafkaConsumerConfig {
     @Bean
     public ConsumerFactory<String, InvestmentMessage> consumerFactory(){
         Map<String,Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka-svc.kafka-ns:9094");
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "groupe-1");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
