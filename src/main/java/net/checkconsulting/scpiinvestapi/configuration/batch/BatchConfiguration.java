@@ -1,4 +1,4 @@
-package net.checkconsulting.scpiinvestapi.configuration;
+package net.checkconsulting.scpiinvestapi.configuration.batch;
 
 import net.checkconsulting.scpiinvestapi.entity.Scpi;
 import net.checkconsulting.scpiinvestapi.batch.ScpiProcessor;

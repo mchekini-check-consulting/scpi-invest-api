@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "scpi-invest-notification", url = "http://scpi-invest-notification.scpi-invest-prd:8080")
+@FeignClient(name = "scpi-invest-notification", url = "${notification-service-url}")
 public interface NotificationClient {
 
     @PostMapping("/email/send")

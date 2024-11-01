@@ -29,6 +29,8 @@ public class Investment {
     @Enumerated(EnumType.STRING)
     private InvestStatus investmentStatus;
     private LocalDateTime statusChangeDate;
+    private String libelle;
+    private String reason;
     private boolean notified;
     private Integer stripping;
 

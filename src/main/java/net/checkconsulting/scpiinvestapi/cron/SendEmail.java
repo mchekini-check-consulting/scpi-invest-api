@@ -1,6 +1,6 @@
 package net.checkconsulting.scpiinvestapi.cron;
 
-import net.checkconsulting.scpiinvestapi.configuration.KeycloakConfiguration;
+import net.checkconsulting.scpiinvestapi.configuration.security.KeycloakConfiguration;
 import net.checkconsulting.scpiinvestapi.dto.EmailDetailsDto;
 import net.checkconsulting.scpiinvestapi.entity.Investment;
 import net.checkconsulting.scpiinvestapi.entity.Price;

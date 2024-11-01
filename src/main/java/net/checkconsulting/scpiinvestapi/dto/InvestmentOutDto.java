@@ -18,7 +18,7 @@ public class InvestmentOutDto {
     private String scpiName;
     private InvestStatus investmentStatus;
     private LocalDateTime requestDate;
-    private LocalDateTime investmentValidationDate;
+    private Long detentionDays;
     private Float totalAmount;
     private Float currentValue;
     private Float distributionRate;

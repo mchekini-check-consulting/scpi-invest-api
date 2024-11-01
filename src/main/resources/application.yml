@@ -3,6 +3,10 @@ application:
   version: 1.0.0
 
 
+partner-service-url: http://scpi-invest-partner:8080
+notification-service-url: http://scpi-invest-notification.scpi-invest-prd:8080
+
+
 keycloak:
   serverUrl: https://keycloak.check-consulting.net
   realm: master
@@ -10,9 +14,9 @@ keycloak:
   adminUsername: admin
   adminPassword: admin
 
-
-
 spring:
+  kafka:
+    bootstrap-servers: kafka.kafka:9094
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres

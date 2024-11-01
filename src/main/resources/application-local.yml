@@ -1,0 +1,6 @@
+partner-service-url: http://localhost:8083
+notification-service-url: http://localhost:8081
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9094

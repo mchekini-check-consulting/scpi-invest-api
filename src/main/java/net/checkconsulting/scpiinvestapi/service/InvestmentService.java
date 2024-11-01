@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static net.checkconsulting.scpiinvestapi.enums.EmailType.REQUEST_VERSMENT;
+import static net.checkconsulting.scpiinvestapi.utils.Constants.APPLICATION_CODE;
 
 
 @Service
@@ -70,40 +71,41 @@ public class InvestmentService {
                     .build();
 
             Investment savedInvest = investmentRepository.save(investment);
+            investment.setLibelle(APPLICATION_CODE + "-" + savedInvest.getId());
 
             EmailDetailsDto emailDetailsDto = EmailDetailsDto.builder()
                     .investorName(userService.getUsername())
                     .investmentAmount(String.valueOf(totalAmount))
                     .investmentDuration(String.valueOf(invest.getStripping()))
-                    .companyName(applicationName)
+                    .companyName(APPLICATION_CODE)
                     .sharePrice(String.valueOf(partPrice))
                     .scpiName(scpi.getName())
                     .iban(scpi.getIban())
                     .bic(scpi.getBic())
+                    .libelle(savedInvest.getLibelle())
                     .numberOfShares(String.valueOf(invest.getNumberOfShares()))
                     .propertyType(investment.getPropertyType().name())
                     .emailType(REQUEST_VERSMENT)
                     .build();
 
 
-            savedInvest.setNotified(true);
-            investmentRepository.save(savedInvest);
-
             response.setBic(scpi.getBic());
             response.setIban(scpi.getIban());
-            response.setLabel("SCPI-INVEST-" + savedInvest.getId());
+            response.setLabel(savedInvest.getLibelle());
             response.setTotal(totalAmount);
 
             InvestmentInfoDto investmentInfoDto = InvestmentInfoDto.builder()
                     .totalAmount(totalAmount)
-                    .partnerName(scpi.getName())
+                    .partnerName(APPLICATION_CODE)
                     .numberOfShares(invest.getNumberOfShares())
                     .propertyType(investment.getPropertyType().name())
                     .stripping(invest.getStripping())
-                    .investmentLabel("SCPI-INVEST-" + savedInvest.getId())
+                    .investmentLabel(savedInvest.getLibelle())
                     .build();
             investmentInfo.sendInvestmentInfo(investmentInfoDto);
             notificationClient.sendEmail(userService.getEmail(), "Validation de l'opération - Test", emailDetailsDto);
+            savedInvest.setNotified(true);
+            investmentRepository.save(savedInvest);
 
 
         } else {
@@ -170,7 +172,8 @@ public class InvestmentService {
     }
 
     public List<InvestmentOutDto> getUserInvestments() {
-        List<InvestmentOutDto> investmentOutDtos = investmentRepository.findByUserEmail(userService.getEmail()).stream().map(investmentMapper::mapToInvestmentOutDto).toList();
-        return investmentOutDtos;
+        return investmentRepository.findByUserEmail(userService.getEmail()).stream()
+                .map(investmentMapper::mapToInvestmentOutDto)
+                .toList();
     }
 }

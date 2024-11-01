@@ -5,8 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "scpi-invest-info", url = "http://scpi-invest-partner:8080")
-
+@FeignClient(name = "scpi-invest-partner", url = "${partner-service-url}")
 public interface InvestmentInfo {
     @PostMapping("/api/v1/investments/create")
     String sendInvestmentInfo (@RequestBody InvestmentInfoDto investmentInfoDto);

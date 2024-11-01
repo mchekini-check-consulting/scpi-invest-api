@@ -1,7 +1,7 @@
 package net.checkconsulting.scpiinvestapi.service;
 
 import jakarta.annotation.PostConstruct;
-import net.checkconsulting.scpiinvestapi.configuration.KeycloakConfiguration;
+import net.checkconsulting.scpiinvestapi.configuration.security.KeycloakConfiguration;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.representations.idm.RoleRepresentation;

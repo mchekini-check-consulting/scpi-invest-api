@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface InvestmentRepository extends JpaRepository<Investment, Integer> {
     @Query("""
@@ -34,6 +35,8 @@ public interface InvestmentRepository extends JpaRepository<Investment, Integer>
             group by s.id.sector
             """)
     List<Map<String, Double>> getPortfolioSectorsByUser(String userEmail);
+
+    Optional<Investment> findByLibelle(String libelle);
 
 
     @EntityGraph(attributePaths = {"scpi", "scpi.prices"})

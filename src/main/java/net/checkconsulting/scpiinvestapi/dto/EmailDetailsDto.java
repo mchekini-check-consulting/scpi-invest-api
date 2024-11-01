@@ -20,6 +20,7 @@ public class EmailDetailsDto {
     private String propertyType;
     private String investmentDuration;
     private String iban;
+    private String libelle;
     private String bic;
     private String companyName;
     private EmailType emailType;
