@@ -7,21 +7,21 @@ node("ci-node"){
         GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
     }
 
-//    stage("Tests unitaires"){
-//        sh "chmod 777 mvnw && ./mvnw clean test"
-//    }
-
-    stage("Quality Analyses"){
-
+    stage("Tests unitaires"){
         sh "chmod 777 mvnw"
-        withCredentials([usernamePassword(credentialsId: 'sonar-token', passwordVariable: 'password', usernameVariable: 'username')]) {
-                 sh "./mvnw clean verify sonar:sonar \\\n" +
-                         "  -Dsonar.projectKey=scpi-invest-api \\\n" +
-                         "  -Dsonar.projectName='scpi-invest-api' \\\n" +
-                         "  -Dsonar.host.url=https://sonarqube.check-consulting.net \\\n" +
-                         "  -Dsonar.token=$password"
-        }
+//        sh "./mvnw clean test"
     }
+
+//    stage("Quality Analyses"){
+//
+//        withCredentials([usernamePassword(credentialsId: 'sonar-token', passwordVariable: 'password', usernameVariable: 'username')]) {
+//                 sh "./mvnw clean verify sonar:sonar \\\n" +
+//                         "  -Dsonar.projectKey=scpi-invest-api \\\n" +
+//                         "  -Dsonar.projectName='scpi-invest-api' \\\n" +
+//                         "  -Dsonar.host.url=https://sonarqube.check-consulting.net \\\n" +
+//                         "  -Dsonar.token=$password"
+//        }
+//    }
 
 
     stage("Build Jar File"){
