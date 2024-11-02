@@ -1,9 +1,12 @@
 package net.checkconsulting.scpiinvestapi.configuration.kafka;
 
 import lombok.extern.slf4j.Slf4j;
+import net.checkconsulting.scpiinvestapi.dto.EmailPlannedInvestPartnerNotificationDto;
 import net.checkconsulting.scpiinvestapi.enums.InvestStatus;
+import net.checkconsulting.scpiinvestapi.feignClients.NotificationClient;
 import net.checkconsulting.scpiinvestapi.repository.InvestmentRepository;
 import net.checkconsulting.scpiinvestapi.repository.PlanifiedInvestmentRepository;
+import net.checkconsulting.scpiinvestapi.service.UserService;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +16,15 @@ public class InvestmentConsumer {
 
     private final InvestmentRepository investmentRepository;
     private final PlanifiedInvestmentRepository planifiedInvestmentRepository;
+    private final NotificationClient notificationClient;
+    private final UserService userService;
 
-    public InvestmentConsumer(InvestmentRepository investmentRepository, PlanifiedInvestmentRepository planifiedInvestmentRepository) {
+    public InvestmentConsumer(InvestmentRepository investmentRepository, PlanifiedInvestmentRepository planifiedInvestmentRepository, NotificationClient notificationClient, UserService userService) {
         this.investmentRepository = investmentRepository;
 
         this.planifiedInvestmentRepository = planifiedInvestmentRepository;
+        this.notificationClient = notificationClient;
+        this.userService = userService;
     }
 
     @KafkaListener(topics = "investments-status-${spring.profiles.active}", groupId = "groupe-1")
@@ -44,7 +51,14 @@ public class InvestmentConsumer {
             plannedInvestment.setDecisionDate(data.getDecisionDate());
             plannedInvestment.setReason(data.getReason());
             planifiedInvestmentRepository.save(plannedInvestment);
-            log.info("Le statut de l'investissement numéro : {} a été mis à jour avec succes, nouveau statut = {}, date de décision = {} "
+
+            EmailPlannedInvestPartnerNotificationDto rejectInfo = EmailPlannedInvestPartnerNotificationDto.builder()
+                    .investorName(userService.getFirstName()+" "+userService.getLastName())
+                    .reason(plannedInvestment.getReason())
+                    .build();
+            notificationClient.sendEmailRejectPlannedInvest(userService.getEmail(),"Notification de Refus de Demande de Prélèvement Programmée",rejectInfo);
+
+        log.info("Le statut de l'investissement numéro : {} a été mis à jour avec succes, nouveau statut = {}, date de décision = {} "
                     , plannedInvestment.getId(), plannedInvestment.getStatus(), plannedInvestment.getDecisionDate());
         });
 

@@ -1,6 +1,7 @@
 package net.checkconsulting.scpiinvestapi.feignClients;
 
 import net.checkconsulting.scpiinvestapi.dto.EmailDetailsDto;
+import net.checkconsulting.scpiinvestapi.dto.EmailPlannedInvestPartnerNotificationDto;
 import net.checkconsulting.scpiinvestapi.dto.PlannedInvestementEmailDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,4 +16,7 @@ public interface NotificationClient {
 
     @PostMapping("/email/planned-invest")
     String sendEmailPlannedInvest(@RequestParam String to, @RequestParam String subject, @RequestBody PlannedInvestementEmailDto plannedInvestementEmailDto);
+
+    @PostMapping("/email/reject-planned-invest")
+    String sendEmailRejectPlannedInvest(@RequestParam String to, @RequestParam String subject, @RequestBody EmailPlannedInvestPartnerNotificationDto plannedInvestementEmailDto);
 }
