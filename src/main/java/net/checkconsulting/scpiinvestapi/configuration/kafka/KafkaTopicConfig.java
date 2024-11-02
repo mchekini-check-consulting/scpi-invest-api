@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@Profile("!test")
 public class KafkaTopicConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")
@@ -22,7 +21,7 @@ public class KafkaTopicConfig {
     @Bean
     public KafkaAdmin kafkaAdmin() {
         Map<String, Object> configs = new HashMap<>();
-        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka-svc.kafka-ns:9094");
+        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
         return new KafkaAdmin(configs);
     }
 

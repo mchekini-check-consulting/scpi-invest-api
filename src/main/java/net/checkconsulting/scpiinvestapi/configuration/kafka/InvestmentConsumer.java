@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-@Profile("!test")
 public class InvestmentConsumer {
 
     private final InvestmentRepository investmentRepository;
@@ -21,6 +20,7 @@ public class InvestmentConsumer {
     @KafkaListener(topics = "investments-status", groupId = "groupe-1")
     public void processInvestmentMessage(InvestmentMessage data){
 
+        log.info("received message from Kafka {}", data);
         investmentRepository.findByLibelle(data.getLabel()).ifPresent( investment -> {
             investment.setInvestmentStatus(InvestStatus.valueOf(data.getStatus()));
             investment.setStatusChangeDate(data.getDecisionDate());
