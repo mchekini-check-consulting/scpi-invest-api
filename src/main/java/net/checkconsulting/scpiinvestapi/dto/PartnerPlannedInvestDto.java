@@ -10,12 +10,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class PartnerPlannedInvestDto {
-    public String firstName;
-    public String lastName;
-    public String email;
-    public double montant;
-    public String frequence;
-    public int jourPrelevement;
-    public int nombreDePart;
-    public String typeDePropriete;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private double amount;
+    private String frequency;
+    private int debitDayOfMonth;
+    private int numberOfShares;
+    private String propertyType;
+    private String label;
+
 }

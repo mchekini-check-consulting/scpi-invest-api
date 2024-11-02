@@ -32,6 +32,9 @@ public class PlanifiedInvestment {
     private InvestStatus status;
     private Integer numberOfShares;
     private LocalDateTime requestDate;
+    private String label;
+    private String reason;
+    private LocalDateTime decisionDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scpi_id", nullable = false)
