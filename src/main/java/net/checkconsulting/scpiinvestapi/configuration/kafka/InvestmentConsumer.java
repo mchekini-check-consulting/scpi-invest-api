@@ -3,7 +3,6 @@ package net.checkconsulting.scpiinvestapi.configuration.kafka;
 import lombok.extern.slf4j.Slf4j;
 import net.checkconsulting.scpiinvestapi.enums.InvestStatus;
 import net.checkconsulting.scpiinvestapi.repository.InvestmentRepository;
-import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
