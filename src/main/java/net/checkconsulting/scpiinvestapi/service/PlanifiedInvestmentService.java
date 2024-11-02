@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+import static net.checkconsulting.scpiinvestapi.utils.Constants.APPLICATION_CODE;
+
 @Service
 public class PlanifiedInvestmentService {
 
@@ -48,15 +50,19 @@ public class PlanifiedInvestmentService {
 
         Integer planifiedInvestement= planifiedInvestmentRepository.save(planifiedInvestment).getId();
 
+        planifiedInvestment.setLabel(APPLICATION_CODE + "-" + planifiedInvestment.getId());
+         planifiedInvestmentRepository.save(planifiedInvestment).getId();
+
         PartnerPlannedInvestDto partnerPlannedInvestDto = PartnerPlannedInvestDto.builder()
                 .email(userService.getEmail())
                 .firstName(userService.getFirstName())
                 .lastName(userService.getLastName())
-                .frequence(planifiedInvestment.getFrequency().name())
-                .jourPrelevement(planifiedInvestment.getDebitDayOfMonth())
-                .montant(planifiedInvestment.getAmount())
-                .nombreDePart(planifiedInvestment.getNumberOfShares())
-                .typeDePropriete(PropertyType.PLEINE_PROPRIETE.name())
+                .frequency(planifiedInvestment.getFrequency().name())
+                .debitDayOfMonth(planifiedInvestment.getDebitDayOfMonth())
+                .amount(planifiedInvestment.getAmount())
+                .numberOfShares(planifiedInvestment.getNumberOfShares())
+                .propertyType(PropertyType.PLEINE_PROPRIETE.name())
+                .label(APPLICATION_CODE + "-" + planifiedInvestment.getId())
                 .build();
         investmentInfo.sendPlannedInvestement(partnerPlannedInvestDto);
 

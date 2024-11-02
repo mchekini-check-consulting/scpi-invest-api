@@ -32,4 +32,9 @@ public class KafkaTopicConfig {
         return new NewTopic("investments-status-" + env, 1, (short) 1);
     }
 
+    @Bean
+    public NewTopic plannedInvestmentTopic(){
+        return new NewTopic("planned-investments-status-" + env, 1, (short) 1);
+    }
+
 }
