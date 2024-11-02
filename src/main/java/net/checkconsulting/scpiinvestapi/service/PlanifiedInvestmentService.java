@@ -1,9 +1,12 @@
 package net.checkconsulting.scpiinvestapi.service;
 
+import net.checkconsulting.scpiinvestapi.dto.PartnerPlannedInvestDto;
 import net.checkconsulting.scpiinvestapi.dto.PlanifiedInvestmentDto;
 import net.checkconsulting.scpiinvestapi.dto.PlannedInvestementEmailDto;
 import net.checkconsulting.scpiinvestapi.entity.PlanifiedInvestment;
 import net.checkconsulting.scpiinvestapi.enums.InvestStatus;
+import net.checkconsulting.scpiinvestapi.enums.PropertyType;
+import net.checkconsulting.scpiinvestapi.feignClients.InvestmentInfo;
 import net.checkconsulting.scpiinvestapi.feignClients.NotificationClient;
 import net.checkconsulting.scpiinvestapi.repository.PlanifiedInvestmentRepository;
 import net.checkconsulting.scpiinvestapi.repository.ScpiRepository;
@@ -18,12 +21,14 @@ public class PlanifiedInvestmentService {
     private final UserService userService;
     private final ScpiRepository scpiRepository;
     private final NotificationClient notificationClient;
+    private final InvestmentInfo investmentInfo;
 
-    public PlanifiedInvestmentService(PlanifiedInvestmentRepository planifiedInvestmentRepository, UserService userService, ScpiRepository scpiRepository, NotificationClient notificationClient) {
+    public PlanifiedInvestmentService(PlanifiedInvestmentRepository planifiedInvestmentRepository, UserService userService, ScpiRepository scpiRepository, NotificationClient notificationClient, InvestmentInfo investmentInfo) {
         this.planifiedInvestmentRepository = planifiedInvestmentRepository;
         this.userService = userService;
         this.scpiRepository = scpiRepository;
         this.notificationClient = notificationClient;
+        this.investmentInfo = investmentInfo;
     }
 
 
@@ -42,6 +47,18 @@ public class PlanifiedInvestmentService {
                 .build();
 
         Integer planifiedInvestement= planifiedInvestmentRepository.save(planifiedInvestment).getId();
+
+        PartnerPlannedInvestDto partnerPlannedInvestDto = PartnerPlannedInvestDto.builder()
+                .email(userService.getEmail())
+                .firstName(userService.getFirstName())
+                .lastName(userService.getLastName())
+                .frequence(planifiedInvestment.getFrequency().name())
+                .jourPrelevement(planifiedInvestment.getDebitDayOfMonth())
+                .montant(planifiedInvestment.getAmount())
+                .nombreDePart(planifiedInvestment.getNumberOfShares())
+                .typeDePropriete(PropertyType.PLEINE_PROPRIETE.name())
+                .build();
+        investmentInfo.sendPlannedInvestement(partnerPlannedInvestDto);
 
         PlannedInvestementEmailDto plannedInvestementEmailDto =  PlannedInvestementEmailDto.builder()
                 .investorName(userService.getUsername())
