@@ -3,6 +3,7 @@ package net.checkconsulting.scpiinvestapi.configuration.kafka;
 import lombok.extern.slf4j.Slf4j;
 import net.checkconsulting.scpiinvestapi.enums.InvestStatus;
 import net.checkconsulting.scpiinvestapi.repository.InvestmentRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ public class InvestmentConsumer {
         this.investmentRepository = investmentRepository;
     }
 
-    @KafkaListener(topics = "investments-status", groupId = "groupe-1")
+    @KafkaListener(topics = "investments-status-${spring.profiles.active}", groupId = "groupe-1")
     public void processInvestmentMessage(InvestmentMessage data){
 
         log.info("received message from Kafka {}", data);
