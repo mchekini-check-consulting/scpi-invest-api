@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static net.checkconsulting.scpiinvestapi.enums.EmailType.REQUEST_VERSMENT;
+import static net.checkconsulting.scpiinvestapi.enums.InvestStatus.VALIDATED;
 import static net.checkconsulting.scpiinvestapi.utils.Constants.APPLICATION_CODE;
 
 
@@ -175,5 +176,11 @@ public class InvestmentService {
         return investmentRepository.findByUserEmail(userService.getEmail()).stream()
                 .map(investmentMapper::mapToInvestmentOutDto)
                 .toList();
+    }
+
+    public List<InvestmentForSimulationDto> getInvestmentForSimulation() {
+
+         return investmentRepository.findByUserEmailAndInvestmentStatusEquals(userService.getEmail(), VALIDATED)
+                 .stream().map(investmentMapper::mapToInvestmentForSimulationDto).toList();
     }
 }
