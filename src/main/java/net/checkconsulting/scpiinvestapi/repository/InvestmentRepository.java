@@ -41,4 +41,7 @@ public interface InvestmentRepository extends JpaRepository<Investment, Integer>
 
     @EntityGraph(attributePaths = {"scpi", "scpi.prices"})
     List<Investment> findInvestmentByRequestDateIsBetweenAndInvestmentStatusEquals(LocalDateTime startDate, LocalDateTime endDate, InvestStatus investStatus);
+
+
+    List<Investment> findByUserEmailAndInvestmentStatusEquals(String userEmail, InvestStatus investStatus);
 }

@@ -8,14 +8,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import net.checkconsulting.scpiinvestapi.dto.BankInfo;
 import net.checkconsulting.scpiinvestapi.dto.InvestmentDtoIn;
+import net.checkconsulting.scpiinvestapi.dto.InvestmentForSimulationDto;
 import net.checkconsulting.scpiinvestapi.dto.PortfolioPerformanceDto;
 import net.checkconsulting.scpiinvestapi.service.InvestmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -92,5 +93,18 @@ public class InvestmentResource {
             errorResponse.put("error", "An unexpected error occurred: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
+    }
+
+    @Operation(summary = "Récupérer les données de simulation d'investissement",
+            description = "Retourne une liste de données d'investissement préparées pour la simulation.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Simulations d'investissement récupérées avec succès",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = InvestmentForSimulationDto.class))),
+            @ApiResponse(responseCode = "500", description = "Erreur interne du serveur",
+                    content = @Content(mediaType = "application/json"))
+    })
+    @GetMapping("/investment-simulation")
+    public ResponseEntity<List<InvestmentForSimulationDto>> getInvestmentForSimulation() {
+        return ResponseEntity.status(HttpStatus.OK).body(this.investmentService.getInvestmentForSimulation());
     }
 }
