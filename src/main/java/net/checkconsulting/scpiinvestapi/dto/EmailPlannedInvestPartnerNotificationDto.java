@@ -12,4 +12,7 @@ import lombok.NoArgsConstructor;
 public class EmailPlannedInvestPartnerNotificationDto {
     private String investorName;
     private String reason;
+    private String frequency;
+    private Float amount;
+    private Integer debitDayOfMonth;
 }
