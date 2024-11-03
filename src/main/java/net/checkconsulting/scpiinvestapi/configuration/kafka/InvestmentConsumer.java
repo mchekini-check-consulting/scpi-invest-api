@@ -52,12 +52,22 @@ public class InvestmentConsumer {
             plannedInvestment.setReason(data.getReason());
             planifiedInvestmentRepository.save(plannedInvestment);
 
-            EmailPlannedInvestPartnerNotificationDto rejectInfo = EmailPlannedInvestPartnerNotificationDto.builder()
-                    .investorName(userService.getFirstName()+" "+userService.getLastName())
-                    .reason(plannedInvestment.getReason())
-                    .build();
-            notificationClient.sendEmailRejectPlannedInvest(userService.getEmail(),"Notification de Refus de Demande de Prélèvement Programmée",rejectInfo);
+            if (plannedInvestment.getStatus()==InvestStatus.REJECTED) {
+                EmailPlannedInvestPartnerNotificationDto rejectInfo = EmailPlannedInvestPartnerNotificationDto.builder()
+                        .investorName(userService.getFirstName() + " " + userService.getLastName())
+                        .reason(plannedInvestment.getReason())
+                        .build();
+                notificationClient.sendEmailRejectPlannedInvest(userService.getEmail(), "Notification de Refus de Demande de Prélèvement Programmée", rejectInfo);
+            } else if (plannedInvestment.getStatus()==InvestStatus.VALIDATED) {
 
+            EmailPlannedInvestPartnerNotificationDto validateInfo = EmailPlannedInvestPartnerNotificationDto.builder()
+                    .investorName(userService.getFirstName()+" "+userService.getLastName())
+                    .amount(plannedInvestment.getAmount())
+                    .frequency(plannedInvestment.getFrequency().name())
+                    .debitDayOfMonth(plannedInvestment.getDebitDayOfMonth())
+                    .build();
+            notificationClient.sendEmailValidatePlannedInvest(userService.getEmail(),"Notification de Validation de Demande de Prélèvement Programmée",validateInfo);
+            }
         log.info("Le statut de l'investissement numéro : {} a été mis à jour avec succes, nouveau statut = {}, date de décision = {} "
                     , plannedInvestment.getId(), plannedInvestment.getStatus(), plannedInvestment.getDecisionDate());
         });
