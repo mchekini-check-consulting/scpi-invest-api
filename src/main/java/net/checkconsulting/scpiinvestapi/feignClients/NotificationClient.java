@@ -20,6 +20,6 @@ public interface NotificationClient {
     @PostMapping("/email/reject-planned-invest")
     String sendEmailRejectPlannedInvest(@RequestParam String to, @RequestParam String subject, @RequestBody EmailPlannedInvestPartnerNotificationDto plannedInvestementEmailDto);
 
-    @PostMapping("/email/validate-planned-invest")
+    @PostMapping("/email/validated-planned-invest")
     String sendEmailValidatePlannedInvest(@RequestParam String to, @RequestParam String subject, @RequestBody EmailPlannedInvestPartnerNotificationDto plannedInvestementEmailDto);
 }
