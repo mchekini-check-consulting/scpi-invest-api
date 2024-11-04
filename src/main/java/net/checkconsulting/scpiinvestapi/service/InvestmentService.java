@@ -195,7 +195,7 @@ public class InvestmentService {
                 .mapToDouble(this::incomeAmount)
                 .sum();
 
-        double averageIncomePercent = totalIncome * 100 / totalInvest;
+        double averageIncomePercent = (totalIncome * 100) / totalInvest;
 
         double cashback = investments.stream()
                 .mapToDouble(this::calculateTotalCashBack)
@@ -215,20 +215,15 @@ public class InvestmentService {
     }
 
     double incomeAmount(Investment invest) {
-        Optional<Price> latestPriceOpt = invest.getScpi().getPrices()
-                .stream()
-                .max(Comparator.comparing(price -> price.getId().getYear()));
+        double totalInvest = invest.getTotalAmount();
 
         Optional<DistributionRate> latestDistributionRateOpt = invest.getScpi().getDistributionRate()
                 .stream()
                 .max(Comparator.comparing(ds -> ds.getId().getYear()));
 
-        if (latestPriceOpt.isPresent() && latestDistributionRateOpt.isPresent()) {
-            double pricePerShare = latestPriceOpt.get().getPrice();
+        if (latestDistributionRateOpt.isPresent()) {
             double distributionRate = latestDistributionRateOpt.get().getDistributionRate();
-            int numberOfShares = invest.getNumberOfShares();
-
-            return pricePerShare * numberOfShares * distributionRate / 100;
+            return totalInvest * distributionRate / 100;
         }
         return 0.0;
     }
