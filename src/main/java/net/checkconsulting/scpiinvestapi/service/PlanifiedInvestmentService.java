@@ -65,7 +65,6 @@ public class PlanifiedInvestmentService {
                 .label(APPLICATION_CODE + "-" + planifiedInvestment.getId())
                 .build();
         investmentInfo.sendPlannedInvestement(partnerPlannedInvestDto);
-
         PlannedInvestementEmailDto plannedInvestementEmailDto =  PlannedInvestementEmailDto.builder()
                 .investorName(userService.getUsername())
                 .plannedInvestmentId(String.valueOf(planifiedInvestement))
