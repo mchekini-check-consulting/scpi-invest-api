@@ -6,15 +6,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
-import net.checkconsulting.scpiinvestapi.dto.BankInfo;
-import net.checkconsulting.scpiinvestapi.dto.InvestmentDtoIn;
-import net.checkconsulting.scpiinvestapi.dto.InvestmentForSimulationDto;
-import net.checkconsulting.scpiinvestapi.dto.PortfolioPerformanceDto;
+import net.checkconsulting.scpiinvestapi.dto.*;
 import net.checkconsulting.scpiinvestapi.service.InvestmentService;
 import net.checkconsulting.scpiinvestapi.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -112,9 +108,16 @@ public class InvestmentResource {
         return ResponseEntity.status(HttpStatus.OK).body(this.investmentService.getInvestmentForSimulation());
     }
 
-    @GetMapping("/total")
-    public ResponseEntity<?> getTotalAndRentInvestments() {
-
+    @Operation(summary = "Récupérer le résumé des investissements",
+            description = "Retourne un résumé des investissements comprenant le total investi, le cashback total et le rendement moyen.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Résumé des investissements récupéré avec succès",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = InvestmentSummaryDto.class))),
+            @ApiResponse(responseCode = "500", description = "Erreur interne du serveur",
+                    content = @Content(mediaType = "application/json"))
+    })
+    @GetMapping("/summary")
+    public ResponseEntity<InvestmentSummaryDto> getTotalAndRentInvestments() {
         return ResponseEntity.ok(investmentService.getTotalAndRentInvestments(userService.getEmail()));
     }
 }

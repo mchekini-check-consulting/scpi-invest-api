@@ -1,6 +1,5 @@
 package net.checkconsulting.scpiinvestapi.service;
 
-import lombok.extern.slf4j.Slf4j;
 import net.checkconsulting.scpiinvestapi.dto.*;
 import net.checkconsulting.scpiinvestapi.entity.DistributionRate;
 import net.checkconsulting.scpiinvestapi.entity.Investment;
@@ -184,40 +183,49 @@ public class InvestmentService {
     }
 
 
-    public Map<String, Double> getTotalAndRentInvestments(String email) {
-        List<Investment> investments = investmentRepository.findByUserEmail(email);
-        HashMap<String, Double> response = new HashMap<>();
+    public InvestmentSummaryDto getTotalAndRentInvestments(String email) {
 
-        double totalIncome = investments.stream()
-                .mapToDouble(this::incomeAmount)
-                .sum();
-        response.put("total_income", totalIncome);
+        List<Investment> investments = investmentRepository.findByUserEmail(email).stream().filter(investment -> investment.getInvestmentStatus()== VALIDATED).toList();
 
         double totalInvest = investments.stream()
                 .mapToDouble(Investment::getTotalAmount)
                 .sum();
-        response.put("total_invest", totalInvest);
 
-        return response;
+        double totalIncome = investments.stream()
+                .mapToDouble(this::incomeAmount)
+                .sum();
+
+        double averageIncomePercent = (totalIncome * 100) / totalInvest;
+
+        double cashback = investments.stream()
+                .mapToDouble(this::calculateTotalCashBack)
+                .sum();
+        return InvestmentSummaryDto.builder()
+                .totalInvest(totalInvest)
+                .averageIncomePercent(averageIncomePercent)
+                .cashbackTotal(cashback)
+                .reelValueInvested(totalInvest-cashback)
+                .build();
+    }
+
+    double calculateTotalCashBack(Investment invest) {
+        double cashback = invest.getScpi().getCashback();
+        double investmentAmount = invest.getTotalAmount();
+        return investmentAmount * cashback / 100;
     }
 
     double incomeAmount(Investment invest) {
-        Optional<Price> latestPriceOpt = invest.getScpi().getPrices()
-                .stream()
-                .max(Comparator.comparing(price -> price.getId().getYear()));
+        double totalInvest = invest.getTotalAmount();
 
         Optional<DistributionRate> latestDistributionRateOpt = invest.getScpi().getDistributionRate()
                 .stream()
                 .max(Comparator.comparing(ds -> ds.getId().getYear()));
 
-        if (latestPriceOpt.isPresent() && latestDistributionRateOpt.isPresent()) {
-            double pricePerShare = latestPriceOpt.get().getPrice();
+        if (latestDistributionRateOpt.isPresent()) {
             double distributionRate = latestDistributionRateOpt.get().getDistributionRate();
-            int numberOfShares = invest.getNumberOfShares();
-
-            return (pricePerShare * numberOfShares * distributionRate / 100) / 12;
+            return totalInvest * distributionRate / 100;
         }
-
         return 0.0;
     }
+
 }
