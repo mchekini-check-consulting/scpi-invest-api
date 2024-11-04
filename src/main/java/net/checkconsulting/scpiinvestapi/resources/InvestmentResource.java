@@ -11,8 +11,10 @@ import net.checkconsulting.scpiinvestapi.dto.InvestmentDtoIn;
 import net.checkconsulting.scpiinvestapi.dto.InvestmentForSimulationDto;
 import net.checkconsulting.scpiinvestapi.dto.PortfolioPerformanceDto;
 import net.checkconsulting.scpiinvestapi.service.InvestmentService;
+import net.checkconsulting.scpiinvestapi.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -25,9 +27,11 @@ import java.util.NoSuchElementException;
 @Slf4j
 public class InvestmentResource {
     private final InvestmentService investmentService;
+    private final UserService userService;
 
-    public InvestmentResource(InvestmentService investmentService){
+    public InvestmentResource(InvestmentService investmentService, UserService userService){
         this.investmentService = investmentService;
+        this.userService = userService;
     }
 
     @Operation(summary = "Récupérer Tous les investissments de l'utilisateur",
@@ -106,5 +110,11 @@ public class InvestmentResource {
     @GetMapping("/investment-simulation")
     public ResponseEntity<List<InvestmentForSimulationDto>> getInvestmentForSimulation() {
         return ResponseEntity.status(HttpStatus.OK).body(this.investmentService.getInvestmentForSimulation());
+    }
+
+    @GetMapping("/total")
+    public ResponseEntity<?> getTotalAndRentInvestments() {
+
+        return ResponseEntity.ok(investmentService.getTotalAndRentInvestments(userService.getEmail()));
     }
 }

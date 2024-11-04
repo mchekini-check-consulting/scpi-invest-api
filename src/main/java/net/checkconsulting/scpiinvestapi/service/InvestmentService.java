@@ -1,6 +1,8 @@
 package net.checkconsulting.scpiinvestapi.service;
 
+import lombok.extern.slf4j.Slf4j;
 import net.checkconsulting.scpiinvestapi.dto.*;
+import net.checkconsulting.scpiinvestapi.entity.DistributionRate;
 import net.checkconsulting.scpiinvestapi.entity.Investment;
 import net.checkconsulting.scpiinvestapi.entity.Price;
 import net.checkconsulting.scpiinvestapi.entity.Scpi;
@@ -15,10 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static net.checkconsulting.scpiinvestapi.enums.EmailType.REQUEST_VERSMENT;
@@ -182,5 +181,43 @@ public class InvestmentService {
 
          return investmentRepository.findByUserEmailAndInvestmentStatusEquals(userService.getEmail(), VALIDATED)
                  .stream().map(investmentMapper::mapToInvestmentForSimulationDto).toList();
+    }
+
+
+    public Map<String, Double> getTotalAndRentInvestments(String email) {
+        List<Investment> investments = investmentRepository.findByUserEmail(email);
+        HashMap<String, Double> response = new HashMap<>();
+
+        double totalIncome = investments.stream()
+                .mapToDouble(this::incomeAmount)
+                .sum();
+        response.put("total_income", totalIncome);
+
+        double totalInvest = investments.stream()
+                .mapToDouble(Investment::getTotalAmount)
+                .sum();
+        response.put("total_invest", totalInvest);
+
+        return response;
+    }
+
+    double incomeAmount(Investment invest) {
+        Optional<Price> latestPriceOpt = invest.getScpi().getPrices()
+                .stream()
+                .max(Comparator.comparing(price -> price.getId().getYear()));
+
+        Optional<DistributionRate> latestDistributionRateOpt = invest.getScpi().getDistributionRate()
+                .stream()
+                .max(Comparator.comparing(ds -> ds.getId().getYear()));
+
+        if (latestPriceOpt.isPresent() && latestDistributionRateOpt.isPresent()) {
+            double pricePerShare = latestPriceOpt.get().getPrice();
+            double distributionRate = latestDistributionRateOpt.get().getDistributionRate();
+            int numberOfShares = invest.getNumberOfShares();
+
+            return (pricePerShare * numberOfShares * distributionRate / 100) / 12;
+        }
+
+        return 0.0;
     }
 }
