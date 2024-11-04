@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.checkconsulting.scpiinvestapi.enums.FamilySituation;
 
 @Data
 @AllArgsConstructor
@@ -12,7 +11,6 @@ import net.checkconsulting.scpiinvestapi.enums.FamilySituation;
 @Builder
 public class TaxInDto {
 
-    private Long annualIncome;
-    private FamilySituation familySituation;
-    private Integer numberOfChildren;
+    private Long annualScpiIncome;
+    private Integer percentInvestmentInFrance;
 }

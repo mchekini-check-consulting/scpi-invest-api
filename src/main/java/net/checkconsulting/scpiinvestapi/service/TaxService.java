@@ -3,49 +3,82 @@ package net.checkconsulting.scpiinvestapi.service;
 import net.checkconsulting.scpiinvestapi.dto.TaxDto;
 import net.checkconsulting.scpiinvestapi.dto.TaxInDto;
 import net.checkconsulting.scpiinvestapi.entity.Tax;
+import net.checkconsulting.scpiinvestapi.entity.UserPreference;
+import net.checkconsulting.scpiinvestapi.enums.FamilySituation;
 import net.checkconsulting.scpiinvestapi.repository.ImpotRepository;
+import net.checkconsulting.scpiinvestapi.repository.UserPreferenceRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static net.checkconsulting.scpiinvestapi.enums.FamilySituation.MARIE;
 import static net.checkconsulting.scpiinvestapi.utils.Constants.PLAFONNEMENT_QUOTIENT_FAMILIAL;
+import static net.checkconsulting.scpiinvestapi.utils.Constants.SOCIAL_DEBIT;
 
 @Service
 public class TaxService {
 
     private final ImpotRepository impotRepository;
+    private final UserPreferenceRepository userPreferenceRepository;
+    private final UserService userService;
 
-    public TaxService(ImpotRepository impotRepository) {
+    public TaxService(ImpotRepository impotRepository, UserPreferenceRepository userPreferenceRepository, UserService userService) {
         this.impotRepository = impotRepository;
+        this.userPreferenceRepository = userPreferenceRepository;
+        this.userService = userService;
     }
 
 
-    public TaxDto calculateTax(TaxInDto taxInDto) {
+    public TaxDto calculateScpiTax(TaxInDto taxDto) {
 
-        double nbParts = calclulateNumberOfParts(taxInDto);
+        UserPreference userPreference = userPreferenceRepository.findById(userService.getEmail()).get();
+
+        float percentInFR = (float) (taxDto.getPercentInvestmentInFrance()) / 100;
+        float percentInUE = (float) (100 - taxDto.getPercentInvestmentInFrance()) / 100;
+
+        TaxDto taxAmountWithoutScpi = calculateTax(userPreference.getIncome(),
+                userPreference.getChildrenCount(), userPreference.getFamilyStatus());
+
+        Integer taxAmountWithScpiInFrance = calculateTax((long) (userPreference.getIncome() + (taxDto.getAnnualScpiIncome() * percentInFR)),
+                userPreference.getChildrenCount(), userPreference.getFamilyStatus()).getAmount();
 
 
 
-        TaxDto taxDto = calculateSimpleTax((long) (taxInDto.getAnnualIncome() / nbParts));
+        Integer taxAmountWithScpiInEU = (int) ((taxAmountWithoutScpi.getTmi() - taxAmountWithoutScpi.getAverageRate()) * taxDto.getAnnualScpiIncome() * percentInUE  ) /100;
+
+        Integer socialDebitInFrance = (int) (taxDto.getAnnualScpiIncome() * percentInFR * SOCIAL_DEBIT / 100);
+
+        return TaxDto.builder()
+                .amount((taxAmountWithScpiInFrance - taxAmountWithoutScpi.getAmount()) + taxAmountWithScpiInEU + socialDebitInFrance )
+                .tmi(taxAmountWithoutScpi.getTmi())
+                .averageRate(taxAmountWithoutScpi.getAverageRate())
+                .build();
+
+    }
+
+
+    public TaxDto calculateTax(Long annualIncome, Integer nbChildren, FamilySituation familySituation) {
+
+        double nbParts = calclulateNumberOfParts(familySituation, nbChildren);
+
+        TaxDto taxDto = calculateSimpleTax((long) (annualIncome / nbParts));
         Integer impotBrut = (int) (taxDto.getAmount() * nbParts);
         Integer plafonnementQuotientFamilial = 0;
         double amountWithoutChildren = 0;
-        if (taxInDto.getNumberOfChildren() > 0){
+        if (nbChildren > 0) {
 
-            if (taxInDto.getFamilySituation() == MARIE){
-               amountWithoutChildren=  calculateSimpleTax((long) (taxInDto.getAnnualIncome() / 2)).getAmount() * 2;
-            }
-            else {
-                amountWithoutChildren  = calculateSimpleTax((long) (taxInDto.getAnnualIncome())).getAmount();
+            if (familySituation == MARIE) {
+                amountWithoutChildren = calculateSimpleTax((long) (annualIncome / 2)).getAmount() * 2;
+            } else {
+                amountWithoutChildren = calculateSimpleTax((long) (annualIncome)).getAmount();
             }
 
-            if (amountWithoutChildren - impotBrut > calclulateNumberOfPartsOfChildren(taxInDto) * PLAFONNEMENT_QUOTIENT_FAMILIAL ){
-                plafonnementQuotientFamilial = (int) (amountWithoutChildren - impotBrut - (calclulateNumberOfPartsOfChildren(taxInDto) * PLAFONNEMENT_QUOTIENT_FAMILIAL));
+            if (amountWithoutChildren - impotBrut > calclulateNumberOfPartsOfChildren(nbChildren) * PLAFONNEMENT_QUOTIENT_FAMILIAL) {
+                plafonnementQuotientFamilial = (int) (amountWithoutChildren - impotBrut - (calclulateNumberOfPartsOfChildren(nbChildren) * PLAFONNEMENT_QUOTIENT_FAMILIAL));
             }
 
             taxDto.setAmount(impotBrut + plafonnementQuotientFamilial);
-            taxDto.setAverageRate(((float) taxDto.getAmount() / taxInDto.getAnnualIncome()) * 100);
+            taxDto.setAverageRate(((float) taxDto.getAmount() / annualIncome) * 100);
 
 
         }
@@ -53,18 +86,18 @@ public class TaxService {
 
     }
 
-    private double calclulateNumberOfParts(TaxInDto taxInDto) {
+    private double calclulateNumberOfParts(FamilySituation familySituation, Integer nbChildren) {
         double nbParts = 1;
-        if (taxInDto.getFamilySituation() == MARIE) nbParts = 2;
-        nbParts = nbParts + (taxInDto.getNumberOfChildren() * 0.5);
-        if (taxInDto.getNumberOfChildren() >= 3) nbParts = nbParts + (taxInDto.getNumberOfChildren() - 2) * 0.5;
+        if (familySituation == MARIE) nbParts = 2;
+        nbParts = nbParts + (nbChildren * 0.5);
+        if (nbChildren >= 3) nbParts = nbParts + (nbChildren - 2) * 0.5;
         return nbParts;
     }
 
-    private double calclulateNumberOfPartsOfChildren(TaxInDto taxInDto) {
+    private double calclulateNumberOfPartsOfChildren(Integer nbChildren) {
         double nbParts = 0;
-        nbParts = nbParts + (taxInDto.getNumberOfChildren());
-        if (taxInDto.getNumberOfChildren() >= 3) nbParts = nbParts + (taxInDto.getNumberOfChildren() - 2);
+        nbParts = nbParts + (nbChildren);
+        if (nbChildren >= 3) nbParts = nbParts + (nbChildren - 2);
         return nbParts;
     }
 
@@ -96,4 +129,6 @@ public class TaxService {
                 .build();
 
     }
+
+
 }
