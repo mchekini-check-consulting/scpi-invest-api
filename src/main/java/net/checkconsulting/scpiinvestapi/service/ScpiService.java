@@ -10,6 +10,7 @@ import net.checkconsulting.scpiinvestapi.repository.ScpiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +29,9 @@ public class ScpiService {
 
     public List<ScpiOutDto> findAllScpi() {
        List<Scpi> result = scpiRepository.findAll();
-     return  result.stream().map(scpiMapper::mapToScpiOutDto).toList();
+     return  result.stream().map(scpiMapper::mapToScpiOutDto)
+             .sorted(Comparator.comparing(ScpiOutDto::getLastYearDistributionRate).reversed())
+             .toList();
 
     }
 
