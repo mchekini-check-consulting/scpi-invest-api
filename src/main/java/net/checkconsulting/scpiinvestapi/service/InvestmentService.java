@@ -1,5 +1,6 @@
 package net.checkconsulting.scpiinvestapi.service;
 
+import lombok.extern.slf4j.Slf4j;
 import net.checkconsulting.scpiinvestapi.dto.*;
 import net.checkconsulting.scpiinvestapi.entity.DistributionRate;
 import net.checkconsulting.scpiinvestapi.entity.Investment;
@@ -25,6 +26,7 @@ import static net.checkconsulting.scpiinvestapi.utils.Constants.APPLICATION_CODE
 
 
 @Service
+@Slf4j
 public class InvestmentService {
 
     @Value("${application.name}")
@@ -48,6 +50,7 @@ public class InvestmentService {
     }
 
     public BankInfo createInvestment(InvestmentDtoIn invest) {
+        log.info("Creating investment for SCPI ID: {}", invest.getScpiId());
         BankInfo response = new BankInfo();
 
         Optional<Scpi> scpiOptional = scpiRepository.findById(invest.getScpiId());
@@ -131,6 +134,7 @@ public class InvestmentService {
 
 
     public PortfolioPerformanceDto getPortfolioPerformance() {
+        log.info("Get portfolio performance for user: {}", userService.getEmail());
 
 
         Map<String, Integer> localizations = investmentRepository.getPortfolioLocalizationsByUser(userService.getEmail())
@@ -171,20 +175,21 @@ public class InvestmentService {
     }
 
     public List<InvestmentOutDto> getUserInvestments() {
+        log.info("Get investments for user: {}", userService.getEmail());
         return investmentRepository.findByUserEmail(userService.getEmail()).stream()
                 .map(investmentMapper::mapToInvestmentOutDto)
                 .toList();
     }
 
     public List<InvestmentForSimulationDto> getInvestmentForSimulation() {
-
+        log.info("Get investments for simulation for user: {}", userService.getEmail());
          return investmentRepository.findByUserEmailAndInvestmentStatusEquals(userService.getEmail(), VALIDATED)
                  .stream().map(investmentMapper::mapToInvestmentForSimulationDto).toList();
     }
 
 
     public InvestmentSummaryDto getTotalAndRentInvestments(String email) {
-
+        log.info("Calculating total and rent investments for user: {}", email);
         List<Investment> investments = investmentRepository.findByUserEmail(email).stream().filter(investment -> investment.getInvestmentStatus()== VALIDATED).toList();
 
         double totalInvest = investments.stream()

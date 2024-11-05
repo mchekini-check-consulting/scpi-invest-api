@@ -20,6 +20,7 @@ public class ComparatorService {
     }
 
     public List<ScpiComparatorOutDto> getInfoScpiForComparison(List<String> selectedScpis, double investValue) {
+        log.info("Get Scpis: {} and investment value: {} for comparison ", selectedScpis, investValue);
         return comparisonRepository.getInfoScpiForComparison(selectedScpis, investValue);
     }
 }

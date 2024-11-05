@@ -4,6 +4,7 @@ package net.checkconsulting.scpiinvestapi.resources;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import net.checkconsulting.scpiinvestapi.dto.ScpiDetailDto;
 import net.checkconsulting.scpiinvestapi.dto.ScpiMultiSearchInDto;
 import net.checkconsulting.scpiinvestapi.dto.ScpiOutDto;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/scpi")
+@Slf4j
 public class ScpiResource {
     private final ScpiService scpiService;
 
@@ -31,6 +33,7 @@ public class ScpiResource {
     })
     @GetMapping
     public ResponseEntity<List<ScpiOutDto>> getAllScpi() {
+        log.info("Fetching all SCPIs");
         return ResponseEntity.ok().body(scpiService.findAllScpi());
     }
 
@@ -43,6 +46,7 @@ public class ScpiResource {
     })
     @GetMapping("/{id}")
     public ResponseEntity<ScpiDetailDto> getScpiById(@PathVariable Integer id) throws Exception {
+        log.info("Get SCPI details for ID: {}", id);
         ScpiDetailDto scpi = scpiService.findScpiById(id);
         return ResponseEntity.ok(scpi);
     }
@@ -57,6 +61,7 @@ public class ScpiResource {
     })
     @PostMapping("/search")
     public ResponseEntity<List<ScpiOutDto>> getScpiByFilter(@RequestBody ScpiMultiSearchInDto scpiMultiSearchInDto) {
+        log.info("Get SCPIs with filters: {}", scpiMultiSearchInDto);
         return ResponseEntity.ok(scpiService.findScpiWithFilters(scpiMultiSearchInDto));
     }
 

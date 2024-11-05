@@ -8,6 +8,7 @@ import net.checkconsulting.scpiinvestapi.repository.InvestmentRepository;
 import net.checkconsulting.scpiinvestapi.repository.PlanifiedInvestmentRepository;
 import net.checkconsulting.scpiinvestapi.service.UserService;
 import org.springframework.kafka.annotation.KafkaListener;
+//import org.springframework.kafka.annotationkout.KafkaListener;
 import org.springframework.stereotype.Service;
 
 @Service
