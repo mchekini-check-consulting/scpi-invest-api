@@ -2,16 +2,25 @@ package net.checkconsulting.scpiinvestapi.resources;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import net.checkconsulting.scpiinvestapi.dto.ScpiDetailDto;
+import net.checkconsulting.scpiinvestapi.dto.ScpiInDto;
 import net.checkconsulting.scpiinvestapi.dto.ScpiMultiSearchInDto;
 import net.checkconsulting.scpiinvestapi.dto.ScpiOutDto;
+import net.checkconsulting.scpiinvestapi.entity.Scpi;
 import net.checkconsulting.scpiinvestapi.service.ScpiService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/scpi")
@@ -60,5 +69,65 @@ public class ScpiResource {
         return ResponseEntity.ok(scpiService.findScpiWithFilters(scpiMultiSearchInDto));
     }
 
+    @Operation(
+            summary = "Créer une nouvelle SCPI",
+            description = "Permet de créer une nouvelle SCPI. Retourne un code 201 avec l'URL d'accès à la ressource dans l'en-tête 'Location'.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Données nécessaires pour créer une SCPI",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ScpiInDto.class)
+                    ),
+                    required = true
+            ),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "SCPI créée avec succès. L'URL d'accès à la ressource est retournée.",
+                            headers = @Header(
+                                    name = "Location",
+                                    description = "URL de la ressource créée",
+                                    schema = @Schema(type = "string", format = "uri")
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Requête invalide. Vérifiez les données fournies.",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Erreur interne du serveur.",
+                            content = @Content(mediaType = "application/json")
+                    )
+            }
+    )
+    @PostMapping
+    public ResponseEntity<Map<String,URI>> createScpi(@RequestBody ScpiInDto scpi) {
+        Integer scpiId = scpiService.createScpi(scpi);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(scpiId)
+                .toUri();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("location", location));
+    }
+
+    @Operation(
+            summary = "Supprimer une SCPI par son ID",
+            description = "Supprime une SCPI existante identifiée par son ID.",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "SCPI supprimée avec succès"),
+                    @ApiResponse(responseCode = "404", description = "SCPI non trouvée"),
+                    @ApiResponse(responseCode = "500", description = "Erreur interne du serveur")
+            }
+    )
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteScpi(@PathVariable Integer id) {
+        scpiService.deleteScpiById(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }

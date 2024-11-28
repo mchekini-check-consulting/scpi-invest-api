@@ -46,7 +46,7 @@ public class Scpi {
     @OneToMany(mappedBy = "scpi", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<Price> prices;
 
-    @OneToMany(mappedBy = "scpi", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "scpi", cascade = {CascadeType.PERSIST, CascadeType.MERGE},orphanRemoval = true)
     private List<DiscountStripping> discountStripping;
 
 }

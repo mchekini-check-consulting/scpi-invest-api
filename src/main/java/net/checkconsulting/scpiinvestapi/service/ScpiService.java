@@ -1,10 +1,12 @@
 package net.checkconsulting.scpiinvestapi.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import net.checkconsulting.scpiinvestapi.dto.ScpiDetailDto;
+import net.checkconsulting.scpiinvestapi.dto.ScpiInDto;
 import net.checkconsulting.scpiinvestapi.dto.ScpiMultiSearchInDto;
 import net.checkconsulting.scpiinvestapi.dto.ScpiOutDto;
-import net.checkconsulting.scpiinvestapi.entity.Scpi;
+import net.checkconsulting.scpiinvestapi.entity.*;
 import net.checkconsulting.scpiinvestapi.mapper.ScpiMapper;
 import net.checkconsulting.scpiinvestapi.repository.ScpiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,23 +29,35 @@ public class ScpiService {
         this.scpiRepository = scpiRepository;
     }
 
+
+    public Integer createScpi(ScpiInDto scpiInDto) {
+        Scpi scpi = scpiMapper.scpiWithoutRelation(scpiInDto);
+        scpi.setLocalizations(scpiMapper.toLocalization(scpiInDto,scpi));
+        scpi.setSectors(scpiMapper.toSector(scpiInDto,scpi));
+        scpi.setDistributionRate(scpiMapper.toDistributionRate(scpiInDto,scpi));
+        scpi.setPrices(scpiMapper.toPrice(scpiInDto,scpi));
+        scpi.setDiscountStripping(scpiMapper.toDiscountStripping(scpiInDto,scpi));
+
+        return scpiRepository.save(scpi).getId();
+    }
+
     public List<ScpiOutDto> findAllScpi() {
-       List<Scpi> result = scpiRepository.findAll();
-     return  result.stream().map(scpiMapper::mapToScpiOutDto)
-             .sorted(Comparator.comparing(ScpiOutDto::getLastYearDistributionRate).reversed())
-             .toList();
+        List<Scpi> result = scpiRepository.findAll();
+        return result.stream().map(scpiMapper::mapToScpiOutDto)
+                .sorted(Comparator.comparing(ScpiOutDto::getLastYearDistributionRate).reversed())
+                .toList();
 
     }
 
     public List<ScpiOutDto> findScpiWithFilters(ScpiMultiSearchInDto scpiMultiSearchInDto) {
-        List<Scpi> result =  scpiRepository.searchScpiad(
+        List<Scpi> result = scpiRepository.searchScpiad(
                 scpiMultiSearchInDto.getSearchTerm(),
                 scpiMultiSearchInDto.getAmount(),
                 scpiMultiSearchInDto.getFees(),
                 scpiMultiSearchInDto.getLocalizations(),
                 scpiMultiSearchInDto.getSectors()
         );
-        return  result.stream().map(scpiMapper::mapToScpiOutDto).toList();
+        return result.stream().map(scpiMapper::mapToScpiOutDto).toList();
     }
 
     public ScpiDetailDto findScpiById(Integer id) throws Exception {
@@ -53,6 +67,10 @@ public class ScpiService {
         return scpiMapper.mapToScpiDetailDto(optionalScpi.get());
     }
 
-
-
+    public void deleteScpiById(Integer id) {
+        if (!scpiRepository.existsById(id)) {
+            throw new EntityNotFoundException("SCPI avec l'ID " + id + " introuvable");
+        }
+        scpiRepository.deleteById(id);
+    }
 }
