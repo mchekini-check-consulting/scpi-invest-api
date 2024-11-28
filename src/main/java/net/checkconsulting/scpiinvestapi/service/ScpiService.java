@@ -1,5 +1,6 @@
 package net.checkconsulting.scpiinvestapi.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import net.checkconsulting.scpiinvestapi.dto.ScpiDetailDto;
 import net.checkconsulting.scpiinvestapi.dto.ScpiInDto;
@@ -64,5 +65,12 @@ public class ScpiService {
         if (optionalScpi.isEmpty()) throw new Exception("No SCPI with ID = " + id);
 
         return scpiMapper.mapToScpiDetailDto(optionalScpi.get());
+    }
+
+    public void deleteScpiById(Integer id) {
+        if (!scpiRepository.existsById(id)) {
+            throw new EntityNotFoundException("SCPI avec l'ID " + id + " introuvable");
+        }
+        scpiRepository.deleteById(id);
     }
 }

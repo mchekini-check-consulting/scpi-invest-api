@@ -115,4 +115,19 @@ public class ScpiResource {
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("location", location));
     }
 
+    @Operation(
+            summary = "Supprimer une SCPI par son ID",
+            description = "Supprime une SCPI existante identifiée par son ID.",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "SCPI supprimée avec succès"),
+                    @ApiResponse(responseCode = "404", description = "SCPI non trouvée"),
+                    @ApiResponse(responseCode = "500", description = "Erreur interne du serveur")
+            }
+    )
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteScpi(@PathVariable Integer id) {
+        scpiService.deleteScpiById(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
