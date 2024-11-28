@@ -1,6 +1,7 @@
 package net.checkconsulting.scpiinvestapi.mapper;
 
 import net.checkconsulting.scpiinvestapi.dto.ScpiDetailDto;
+import net.checkconsulting.scpiinvestapi.dto.ScpiInDto;
 import net.checkconsulting.scpiinvestapi.dto.ScpiOutDto;
 import net.checkconsulting.scpiinvestapi.entity.*;
 import org.mapstruct.Mapper;
@@ -72,6 +73,84 @@ public interface ScpiMapper {
         return maxLocalization.map(item -> item.getId().getCountry())
                 .orElse("N/A");
     }
+
+
+    default  Scpi scpiWithoutRelation(ScpiInDto scpiInDto) {
+        return Scpi.builder()
+                .name(scpiInDto.getName())
+                .minimumSubscription(scpiInDto.getMinimumSubscription())
+                .capitalization(scpiInDto.getCapitalization())
+                .manager(scpiInDto.getManager())
+                .subscriptionFees(scpiInDto.getSubscriptionFees())
+                .managementFees(scpiInDto.getManagementFees())
+                .delayBenefit(scpiInDto.getDelayBenefit())
+                .rentFrequency(scpiInDto.getRentFrequency())
+                .iban(scpiInDto.getIban())
+                .bic(scpiInDto.getBic())
+                .isStripping(scpiInDto.getIsStripping())
+                .cashback(scpiInDto.getCashback())
+                .isPlanedInvestment(scpiInDto.getIsPlanedInvestment())
+                .advertising(scpiInDto.getAdvertising())
+                .build();
+    }
+
+    default   List<Localization> toLocalization(ScpiInDto scpiInDto,Scpi scpi) {
+        return scpiInDto.getLocalizations().stream().map((item) -> Localization.builder()
+                .id(LocalizationId.builder()
+                        .country(item.getLocation())
+                        .scpiId(scpi.getId())
+                        .build())
+                .scpi(scpi)
+                .percent(item.getPercent())
+                .build()).toList();
+    }
+
+    default    List<Sector> toSector(ScpiInDto scpiInDto,Scpi scpi) {
+        return scpiInDto.getSectors().stream().map((item) -> Sector.builder()
+                .id(SectorId.builder()
+                        .scpiId(scpi.getId())
+                        .sector(item.getSectorName())
+                        .build())
+                .scpi(scpi)
+                .percent(item.getPercent())
+                .build()).toList();
+    }
+
+    default  List<DistributionRate> toDistributionRate(ScpiInDto scpiInDto,Scpi scpi) {
+        return scpiInDto.getDistributionRates().stream().map((item) -> DistributionRate.builder()
+                .id(DistributionRateId.builder()
+                        .scpiId(scpi.getId())
+                        .year(item.getYear())
+                        .build())
+                .scpi(scpi)
+                .distributionRate(item.getDistributionRate())
+                .build()).toList();
+    }
+
+    default  List<Price> toPrice(ScpiInDto scpiInDto,Scpi scpi) {
+        return scpiInDto.getPrices().stream().map((item) -> Price.builder()
+                .id(PriceId.builder()
+                        .scpiId(scpi.getId())
+                        .year(item.getYear())
+                        .build())
+                .scpi(scpi)
+                .price(item.getPrice())
+                .reconstitution(item.getReconstitution())
+                .build()).toList();
+    }
+
+    default List<DiscountStripping> toDiscountStripping(ScpiInDto scpiInDto,Scpi scpi) {
+        return scpiInDto.getDiscountStrippings().stream().map((item) ->
+                DiscountStripping.builder()
+                        .id(DiscountStrippingId.builder()
+                                .scpiId(scpi.getId())
+                                .year(item.getYear())
+                                .build())
+                        .scpi(scpi)
+                        .discount(item.getDiscount())
+                        .build()).toList();
+    }
+
 
 
 }
